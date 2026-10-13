@@ -4,7 +4,7 @@
 
 ## 安装
 
-1. 到 [Releases](https://github.com/W1ght/weblio-hokkaido-dialect-yomitan/releases/latest) 下载 `weblio-hokkaido-dialect-yomitan.zip`
+1. 到 [Releases](https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/latest) 下载 `weblio-hokkaido-dialect-yomitan.zip`
 2. Yomitan → 设置 → Dictionaries → **Import** → 选择该 zip
 
 ## 更新
