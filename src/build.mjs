@@ -16,10 +16,12 @@ import { makeZip } from "./zip.mjs";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 // GitHub repository that hosts the releases, as "owner/name".
+// The update workflow passes this explicitly via GITHUB_REPOSITORY, so the
+// fallback only matters for local runs.
 const REPO =
   process.env.YOMITAN_REPO ||
   process.env.GITHUB_REPOSITORY ||
-  "Sakura-bot-MAX/weblio-dialect-yomitan";
+  "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan";
 
 // --- helpers --------------------------------------------------------------
 
