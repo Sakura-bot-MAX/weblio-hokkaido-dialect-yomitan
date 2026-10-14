@@ -1,33 +1,25 @@
-// Build the Yomitan (format 3) dictionary from data/raw.json.
+// Build one Yomitan (format 3) dictionary per dialect from data/<slug>.json.
 //
-//   node src/build.mjs
+//   node src/build.mjs              # every snapshot that exists
+//   node src/build.mjs --slug=osaka
 //
-// Writes dist/index.json, dist/term_bank_1.json and the packaged zip. The zip
-// timestamp is derived from the revision date so identical content produces a
-// byte-identical archive, which lets CI tell whether a rebuild changed anything.
+// Each dictionary gets its own dist/<slug>/{index.json,term_bank_1.json,<zip>}
+// and self-updates from a per-dictionary release tag, so installing one
+// dialect does not drag in the other twenty-two.
 
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { deflateSync } from "node:zlib";
 import { makeZip } from "./zip.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-// GitHub repository that hosts the releases, as "owner/name". CI passes the
-// actual repo via YOMITAN_REPO (see .github/workflows/update.yml), so forks
-// get correct self-update URLs without editing this file.
+// GitHub repository that hosts the releases, as "owner/name".
 const REPO =
   process.env.YOMITAN_REPO ||
   process.env.GITHUB_REPOSITORY ||
-  "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan";
-
-const TITLE = "Weblio北海道方言";
-const DESCRIPTION =
-  "北海道方言辞書（Weblio）の全項目を収録した方言辞典です。";
-const AUTHOR = process.env.YOMITAN_AUTHOR || "Weblio 北海道方言辞書";
-const UPSTREAM_URL = "https://www.weblio.jp/cat/dialect/hkdhj";
-const ZIP_NAME = "weblio-hokkaido-dialect-yomitan.zip";
+  "Sakura-bot-MAX/weblio-dialect-yomitan";
 
 // --- helpers --------------------------------------------------------------
 
@@ -53,13 +45,13 @@ function kanjiVariants(field) {
 }
 
 /** Merge every written form of one word (same reading + pos + gloss) into a
- *  single entry, unioning all of its kanji spellings. */
+ *  single entry, unioning all of its kanji spellings and index labels. */
 function mergeForms(rows) {
   const groups = new Map();
   for (const x of rows) {
     if (!x.headword) continue;
     const reading = x.reading || x.headword;
-    const key = JSON.stringify([reading, x.pos || [], x.gloss || ""]);
+    const key = JSON.stringify([reading, x.pos || [], x.gloss || "", x.text || "", x.rows || null]);
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(x);
   }
@@ -68,12 +60,18 @@ function mergeForms(rows) {
   for (const items of groups.values()) {
     const primary = { ...items[0] };
     const kanji = [];
+    const labels = [];
+    const variants = [];
     for (const item of items) {
       for (const k of kanjiVariants(item.kanji)) {
         if (k && !kanji.includes(k)) kanji.push(k);
       }
+      if (item.label && !labels.includes(item.label)) labels.push(item.label);
+      for (const v of item.variants || []) if (!variants.includes(v)) variants.push(v);
     }
     if (kanji.length) primary.kanji = kanji.join("・");
+    primary.labels = labels;
+    primary.variants = variants;
     merged.push(primary);
   }
   return merged;
@@ -87,15 +85,71 @@ function cleanReading(s) {
     .trim();
 }
 
+const KANA_ONLY = /^[\u3041-\u309F\u30A0-\u30FF\u30FC\u30FB\u30FD\u30FEー]+$/;
+
+/**
+ * The reading Yomitan should index. 北海道-style entries carry an explicit
+ * <span class=ve> reading; the table dictionaries only expose the heading, so
+ * fall back to any kana-only form we know about (index label first), which
+ * turns 博多弁 "お・る【居る】" into the reading "おる".
+ */
+function entryReading(entry) {
+  if (entry.reading) return cleanReading(entry.reading);
+  const cands = [entry.label, ...(entry.labels || []), entry.headword, ...(entry.variants || [])];
+  for (const c of cands) {
+    const t = String(c || "").trim();
+    if (t && KANA_ONLY.test(t)) return t;
+  }
+  return String(entry.headword || entry.label || "").trim();
+}
+
+/** Index labels are the site's own lookup keys; drop ones that are unusable. */
+function usableLabel(s) {
+  const t = String(s || "").trim();
+  if (!t || t.length > 40) return false;
+  if (/^\d+$/.test(t)) return false;
+  return true;
+}
+
 const bold = (content) => ({ tag: "span", content, style: { fontWeight: "bold" } });
 const td = (content) => ({ tag: "td", content });
 const th = (content) => ({ tag: "th", content, style: { textAlign: "left" } });
 
+/** Render the definition body in whichever shape the source page used. */
+function renderBody(entry) {
+  if (entry.mode === "table" && Array.isArray(entry.rows) && entry.rows.length) {
+    const [head, ...rest] = entry.rows;
+    const body = [
+      { tag: "tr", content: head.map((c) => th(c || "--")) },
+      ...rest.map((row) => ({ tag: "tr", content: row.map((c) => td(c || "--")) })),
+    ];
+    return { tag: "table", content: { tag: "tbody", content: body } };
+  }
+
+  const text = entry.mode === "spans" ? entry.gloss : entry.text;
+  const lines = String(text || "")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+  if (entry.note) lines.push(entry.note);
+  if (!lines.length) return { tag: "div", content: "--" };
+
+  const content = [];
+  lines.forEach((line, i) => {
+    if (i) content.push({ tag: "br" });
+    content.push(line);
+  });
+  return { tag: "div", content };
+}
+
 /** Render one entry as Yomitan structured-content. */
 function buildDefinition(entry) {
-  const { headword, reading, kanji = "", pos = [], region = [], gloss, url } = entry;
+  const { headword, reading, kanji = "", pos = [], region = [], url } = entry;
 
-  const header = [bold(reading || headword)];
+  // The <span class=ve> reading carries the pitch accent as ・; keep it out of
+  // the displayed headword ("あいてくさ・い" -> "あいてくさい").
+  const display = cleanReading(reading) || headword;
+  const header = [bold(display)];
   if (kanji) header.push({ tag: "span", content: `【${kanji}】` });
   if (pos.length) header.push({ tag: "span", content: ` [${pos.join("・")}]` });
   if (region.length) header.push({ tag: "span", content: ` 〈${region.join("・")}〉` });
@@ -106,19 +160,7 @@ function buildDefinition(entry) {
       type: "structured-content",
       content: [
         { tag: "span", content: header, data: { name: "header" } },
-        {
-          tag: "table",
-          content: {
-            tag: "tbody",
-            content: [
-              { tag: "tr", content: [th("北海道方言"), th("漢字表記"), th("解説")] },
-              {
-                tag: "tr",
-                content: [td(headword), td(kanji || "--"), td((gloss || "").trim() || "--")],
-              },
-            ],
-          },
-        },
+        renderBody(entry),
       ],
     },
   ];
@@ -164,7 +206,6 @@ function makeIcon(size = 64) {
   ]);
 }
 
-// Small local CRC-32 (kept here so makeIcon stays self-contained).
 const CRC_TABLE = (() => {
   const t = new Uint32Array(256);
   for (let n = 0; n < 256; n++) {
@@ -182,61 +223,108 @@ function crc32(buf) {
 
 // --- build ----------------------------------------------------------------
 
-const raw = JSON.parse(readFileSync(join(ROOT, "data", "raw.json"), "utf8"));
-const revision = raw.revision || new Date().toISOString().slice(0, 10);
-const rows = raw.entries || [];
+export function buildDictionary(dict) {
+  const { slug } = dict;
+  const rawPath = join(ROOT, "data", `${slug}.json`);
+  if (!existsSync(rawPath)) return null;
 
-const merged = mergeForms(rows);
-console.log(`merge forms: ${rows.length} -> ${merged.length}`);
+  const raw = JSON.parse(readFileSync(rawPath, "utf8"));
+  const revision = raw.revision || new Date().toISOString().slice(0, 10);
+  const rows = raw.entries || [];
 
-// One term per written form (kana headword plus every kanji spelling), so a
-// lookup resolves whether the reader sees the word in kana or in kanji.
-const terms = [];
-const seen = new Set();
-for (const entry of merged) {
-  const reading = cleanReading(entry.reading);
-  const definition = buildDefinition(entry);
-  const add = (expression) => {
-    const key = `${expression}\u0000${reading}\u0000${entry.gloss || ""}`;
-    if (seen.has(key)) return;
-    seen.add(key);
-    terms.push([expression, reading, "", "", 0, definition, 0, ""]);
+  const merged = mergeForms(rows);
+
+  // One term per written form (kana headword, heading variants and every kanji
+  // spelling), so a lookup resolves whichever spelling the reader sees.
+  const terms = [];
+  const seen = new Set();
+  merged.forEach((entry, idx) => {
+    const reading = entryReading(entry);
+    const definition = buildDefinition(entry);
+    const add = (expression) => {
+      const expr = String(expression || "").trim();
+      if (!expr) return;
+      const key = `${expr}\u0000${reading}\u0000${idx}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      terms.push([expr, reading, "", "", 0, definition, 0, ""]);
+    };
+    add(entry.headword);
+    if (usableLabel(entry.label)) add(entry.label);
+    for (const l of entry.labels || []) if (usableLabel(l)) add(l);
+    for (const v of entry.variants || []) add(v);
+    for (const k of kanjiVariants(entry.kanji)) add(k);
+  });
+
+  const zipName = `weblio-${slug}-dialect-yomitan.zip`;
+  const tag = slug; // one release tag per dictionary
+  const base = `https://github.com/${REPO}/releases/download/${tag}`;
+
+  const index = {
+    title: dict.title,
+    revision,
+    format: 3,
+    author: dict.author,
+    url: raw.source || `https://www.weblio.jp/cat/dialect/${slug}`,
+    description: dict.description,
+    isUpdatable: true,
+    indexUrl: `${base}/index.json`,
+    downloadUrl: `${base}/${zipName}`,
   };
-  add(entry.headword);
-  for (const k of kanjiVariants(entry.kanji)) {
-    if (k && k !== entry.headword) add(k);
-  }
+
+  const indexJson = JSON.stringify(index, null, 2);
+  const termBankJson = JSON.stringify(terms);
+
+  const outDir = join(ROOT, "dist", slug);
+  mkdirSync(outDir, { recursive: true });
+  writeFileSync(join(outDir, "index.json"), indexJson);
+  writeFileSync(join(outDir, "term_bank_1.json"), termBankJson);
+
+  // Timestamp the archive from the revision date for reproducible builds.
+  const zip = makeZip(
+    [
+      { name: "index.json", data: indexJson },
+      { name: "term_bank_1.json", data: termBankJson },
+      { name: "icon.png", data: makeIcon() },
+    ],
+    { date: `${revision}T00:00:00Z` },
+  );
+  writeFileSync(join(outDir, zipName), zip);
+
+  // A friendlier copy for handing the dictionary to a person: the name mirrors
+  // the community convention "[JA-JA Dialect] <dictionary>".
+  const friendly = join(ROOT, "output", `[JA-JA Dialect] ${dict.title}.zip`);
+  mkdirSync(join(ROOT, "output"), { recursive: true });
+  writeFileSync(friendly, zip);
+
+  return { slug, entries: rows.length, merged: merged.length, terms: terms.length, zip, zipName, revision };
 }
-console.log(`terms: ${terms.length}`);
 
-const index = {
-  title: TITLE,
-  revision,
-  format: 3,
-  author: AUTHOR,
-  url: UPSTREAM_URL,
-  description: DESCRIPTION,
-  isUpdatable: true,
-  indexUrl: `https://github.com/${REPO}/releases/latest/download/index.json`,
-  downloadUrl: `https://github.com/${REPO}/releases/latest/download/${ZIP_NAME}`,
-};
+const isMain =
+  process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
 
-const indexJson = JSON.stringify(index, null, 2);
-const termBankJson = JSON.stringify(terms);
+if (isMain) {
+  const slugArg = process.argv.find((a) => a.startsWith("--slug="));
+  const all = JSON.parse(readFileSync(join(ROOT, "dictionaries.json"), "utf8"));
+  const targets = slugArg ? all.filter((d) => d.slug === slugArg.split("=")[1]) : all;
 
-mkdirSync(join(ROOT, "dist"), { recursive: true });
-writeFileSync(join(ROOT, "dist", "index.json"), indexJson);
-writeFileSync(join(ROOT, "dist", "term_bank_1.json"), termBankJson);
-
-// Timestamp the archive from the revision date for reproducible builds.
-const zip = makeZip(
-  [
-    { name: "index.json", data: indexJson },
-    { name: "term_bank_1.json", data: termBankJson },
-    { name: "icon.png", data: makeIcon() },
-  ],
-  { date: `${revision}T00:00:00Z` },
-);
-writeFileSync(join(ROOT, "dist", ZIP_NAME), zip);
-
-console.log(`wrote dist/index.json, dist/term_bank_1.json, dist/${ZIP_NAME} (${zip.length} bytes)`);
+  let totalEntries = 0;
+  let totalTerms = 0;
+  const rows = [];
+  for (const dict of targets) {
+    const r = buildDictionary(dict);
+    if (!r) {
+      console.log(`${dict.slug.padEnd(8)} (no snapshot)`);
+      continue;
+    }
+    totalEntries += r.entries;
+    totalTerms += r.terms;
+    rows.push(r);
+    console.log(
+      `${r.slug.padEnd(8)} ${String(r.entries).padStart(6)} entries -> ` +
+        `${String(r.merged).padStart(5)} words -> ${String(r.terms).padStart(6)} terms  ` +
+        `${(r.zip.length / 1024).toFixed(0)} KiB  rev ${r.revision}`,
+    );
+  }
+  console.log(`\nTOTAL ${totalEntries} entries, ${totalTerms} terms, ${rows.length} dictionaries`);
+}

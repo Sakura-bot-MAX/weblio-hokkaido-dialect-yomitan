@@ -1,0 +1,11 @@
+{
+  "title": "Weblio和歌山弁",
+  "revision": "2026-10-13",
+  "format": 3,
+  "author": "和歌山弁Explorer",
+  "url": "https://www.weblio.jp/cat/dialect/wkybj",
+  "description": "和歌山弁辞書（Weblio）の全項目を収録した方言辞典です。",
+  "isUpdatable": true,
+  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/wkybj/index.json",
+  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/wkybj/weblio-wkybj-dialect-yomitan.zip"
+}

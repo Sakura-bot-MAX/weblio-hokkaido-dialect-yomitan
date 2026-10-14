@@ -1,16 +1,17 @@
 {
-  "name": "weblio-hokkaido-dialect-yomitan",
+  "name": "weblio-dialect-yomitan",
   "version": "1.0.0",
   "private": true,
-  "description": "Yomitan dictionary built from the Weblio 北海道方言辞書, auto-updating",
+  "description": "Yomitan dictionaries built from every Weblio dialect dictionary",
   "type": "module",
   "scripts": {
     "fetch": "node src/fetch-data.mjs",
     "build": "node src/build.mjs",
-    "update": "node src/fetch-data.mjs && node src/build.mjs"
+    "publish": "node src/publish.mjs",
+    "offline": "node src/fetch-data.mjs --offline",
+    "check": "node src/check-samples.mjs"
   },
   "engines": {
-    "node": ">=18"
-  },
-  "license": "MIT"
+    "node": ">=20"
+  }
 }

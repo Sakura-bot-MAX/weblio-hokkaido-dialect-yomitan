@@ -1,0 +1,11 @@
+{
+  "title": "Weblio京ことば",
+  "revision": "2026-10-13",
+  "format": 3,
+  "author": "京ことば",
+  "url": "https://www.weblio.jp/cat/dialect/kyktb",
+  "description": "京ことば（Weblio）の全項目を収録した方言辞典です。",
+  "isUpdatable": true,
+  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/kyktb/index.json",
+  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/kyktb/weblio-kyktb-dialect-yomitan.zip"
+}

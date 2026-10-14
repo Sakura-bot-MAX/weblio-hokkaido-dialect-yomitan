@@ -1,4 +1,4 @@
+cache/
 node_modules/
-*.log
-.DS_Store
-Thumbs.db
+_crawl.log
+_tmp/

@@ -1,0 +1,11 @@
+{
+  "title": "Weblio甲州弁",
+  "revision": "2026-10-13",
+  "format": 3,
+  "author": "うっち～の甲州弁研究所",
+  "url": "https://www.weblio.jp/cat/dialect/ksbjt",
+  "description": "甲州弁辞典（Weblio）の全項目を収録した方言辞典です。",
+  "isUpdatable": true,
+  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/ksbjt/index.json",
+  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/ksbjt/weblio-ksbjt-dialect-yomitan.zip"
+}

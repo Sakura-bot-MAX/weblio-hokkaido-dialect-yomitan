@@ -1,0 +1,11 @@
+{
+  "title": "Weblio魚津弁",
+  "revision": "2026-10-13",
+  "format": 3,
+  "author": "魚津弁",
+  "url": "https://www.weblio.jp/cat/dialect/uodbj",
+  "description": "魚津弁（Weblio）の全項目を収録した方言辞典です。",
+  "isUpdatable": true,
+  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/uodbj/index.json",
+  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/uodbj/weblio-uodbj-dialect-yomitan.zip"
+}

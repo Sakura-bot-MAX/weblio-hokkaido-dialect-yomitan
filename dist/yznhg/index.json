@@ -1,0 +1,11 @@
+{
+  "title": "Weblio焼津の方言",
+  "revision": "2026-10-13",
+  "format": 3,
+  "author": "焼津市歴史民俗資料館",
+  "url": "https://www.weblio.jp/cat/dialect/yznhg",
+  "description": "焼津の方言（Weblio）の全項目を収録した方言辞典です。",
+  "isUpdatable": true,
+  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/yznhg/index.json",
+  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/yznhg/weblio-yznhg-dialect-yomitan.zip"
+}

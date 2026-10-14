@@ -1,0 +1,11 @@
+{
+  "title": "Weblio名古屋弁",
+  "revision": "2026-10-13",
+  "format": 3,
+  "author": "世界最強なごやべん大辞典",
+  "url": "https://www.weblio.jp/cat/dialect/nagya",
+  "description": "世界最強なごやべん大辞典（Weblio）の全項目を収録した方言辞典です。",
+  "isUpdatable": true,
+  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/nagya/index.json",
+  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/nagya/weblio-nagya-dialect-yomitan.zip"
+}

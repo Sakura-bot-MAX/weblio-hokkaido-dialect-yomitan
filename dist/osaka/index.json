@@ -1,0 +1,11 @@
+{
+  "title": "Weblio大阪弁",
+  "revision": "2026-10-13",
+  "format": 3,
+  "author": "全国大阪弁普及協会",
+  "url": "https://www.weblio.jp/cat/dialect/osaka",
+  "description": "大阪市内を中心に話され、全国的な認知度も高い大阪弁について解説しています。",
+  "isUpdatable": true,
+  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/osaka/index.json",
+  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/osaka/weblio-osaka-dialect-yomitan.zip"
+}

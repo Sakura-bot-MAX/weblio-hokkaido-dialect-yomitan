@@ -1,0 +1,11 @@
+{
+  "title": "Weblio津軽語",
+  "revision": "2026-10-13",
+  "format": 3,
+  "author": "津軽語辞典",
+  "url": "https://www.weblio.jp/cat/dialect/tgrgj",
+  "description": "津軽語辞典（Weblio）の全項目を収録した方言辞典です。",
+  "isUpdatable": true,
+  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/tgrgj/index.json",
+  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/tgrgj/weblio-tgrgj-dialect-yomitan.zip"
+}

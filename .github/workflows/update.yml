@@ -1,77 +1,66 @@
-name: Update dictionary
+name: Update dialect dictionaries
 
-# Rebuild the dictionary from the live Weblio source once a day. A new release
-# is published only when the upstream content actually changed, so users are
-# never prompted to update for a no-op rebuild.
+# The crawl touches roughly 25,000 pages on weblio.jp, so it runs weekly rather
+# than daily. Pushes and manual runs only rebuild from the committed snapshots,
+# which keeps CI quick and polite to the upstream site.
 
 on:
   schedule:
-    - cron: "0 3 * * *" # daily, 03:00 UTC
+    - cron: "0 3 * * 0" # Sundays 03:00 UTC
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "dictionaries.json"
+      - ".github/workflows/update.yml"
   workflow_dispatch:
+    inputs:
+      crawl:
+        description: "Crawl weblio.jp before building"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
 
 concurrency:
-  group: update-dictionary
+  group: update-dialects
   cancel-in-progress: false
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
-      - name: Fetch upstream data
+      - name: Crawl weblio.jp
+        if: github.event_name == 'schedule' || inputs.crawl
         run: node src/fetch-data.mjs
 
-      - name: Build dictionary
-        env:
-          YOMITAN_REPO: ${{ github.repository }}
+      - name: Build dictionaries
         run: node src/build.mjs
 
-      - name: Commit changed snapshot and build output
-        id: commit
+      - name: Commit snapshots and builds
         run: |
-          set -e
-          git config user.name "github-actions[bot]"
+          git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet -- data/raw.json dist/; then
-            echo "No upstream change; nothing to publish."
-            echo "changed=false" >> "$GITHUB_OUTPUT"
+          git add data dist
+          if git diff --cached --quiet; then
+            echo "nothing changed"
           else
-            git add data/raw.json dist/
-            git commit -m "Update dictionary ($(date -u +%Y-%m-%d))"
+            git commit -m "Update dialect snapshots [skip ci]"
             git push
-            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Publish release
+      - name: Publish releases
+        run: node src/publish.mjs
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -e
-          revision=$(node -p "require('./dist/index.json').revision")
-          # Publish when the content changed, and also on the very first run so
-          # a freshly-created repository still gets an installable release.
-          if [ "${{ steps.commit.outputs.changed }}" != "true" ] \
-             && gh release view "$revision" >/dev/null 2>&1; then
-            echo "Release $revision is already up to date."
-            exit 0
-          fi
-          if gh release view "$revision" >/dev/null 2>&1; then
-            gh release upload "$revision" \
-              dist/weblio-hokkaido-dialect-yomitan.zip dist/index.json --clobber
-          else
-            gh release create "$revision" \
-              dist/weblio-hokkaido-dialect-yomitan.zip dist/index.json \
-              --title "$revision" \
-              --notes "Weblio 北海道方言辞書 snapshot for $revision.
-
-          Install: download \`weblio-hokkaido-dialect-yomitan.zip\` and import it into Yomitan.
-          Already installed? Yomitan's *Check for updates* will pick this up automatically."
-          fi
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          YOMITAN_REPO: ${{ github.repository }}

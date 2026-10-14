@@ -1,64 +1,102 @@
-# Weblio 北海道方言 · Yomitan 词典
+# Weblio 方言辞典 → Yomitan
 
-把 [Weblio 北海道方言辞書](https://www.weblio.jp/cat/dialect/hkdhj) 打包成 [Yomitan](https://github.com/yomidevs/yomitan) 词典，并且**可以在 Yomitan 里直接检查更新**。
+[Yomitan](https://github.com/yomidevs/yomitan) 用の方言辞典です。Weblio の
+[方言カテゴリ](https://www.weblio.jp/cat/dialect) に収録されている方言辞典を
+すべて取り込み、辞書ごとに 1 つの zip として配布します。
 
-## 安装
+<!-- DICT-TABLE-START -->
+| # | 辞典 | 見出し数 | 検索語数 | スナップショット | ダウンロード |
+|---|---|---|---|---|---|
+| 1 | 大阪弁 | 2639 | 2718 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E5%A4%A7%E9%98%AA%E5%BC%81.zip) |
+| 2 | 甲州弁辞典 | 2492 | 2514 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E7%94%B2%E5%B7%9E%E5%BC%81.zip) |
+| 3 | 沖縄大百科 | 2008 | 2044 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E6%B2%96%E7%B8%84%E5%A4%A7%E7%99%BE%E7%A7%91.zip) |
+| 4 | 仙台弁 | 1924 | 1933 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E4%BB%99%E5%8F%B0%E5%BC%81.zip) |
+| 5 | 魚津弁 | 1584 | 1632 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E9%AD%9A%E6%B4%A5%E5%BC%81.zip) |
+| 6 | 茨城弁大辞典 | 1535 | 1618 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E8%8C%A8%E5%9F%8E%E5%BC%81.zip) |
+| 7 | 但馬方言辞典 | 937 | 1591 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E4%BD%86%E9%A6%AC%E6%96%B9%E8%A8%80.zip) |
+| 8 | 津軽語辞典 | 1432 | 1439 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E6%B4%A5%E8%BB%BD%E8%AA%9E.zip) |
+| 9 | 北海道方言辞書 | 1312 | 1320 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E5%8C%97%E6%B5%B7%E9%81%93%E6%96%B9%E8%A8%80.zip) |
+| 10 | 奥豊後の言葉 | 1246 | 1289 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E5%A5%A5%E8%B1%8A%E5%BE%8C%E3%81%AE%E8%A8%80%E8%91%89.zip) |
+| 11 | 新潟県田上町方言 | 1216 | 1217 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E6%96%B0%E6%BD%9F%E7%9C%8C%E7%94%B0%E4%B8%8A%E7%94%BA%E6%96%B9%E8%A8%80.zip) |
+| 12 | あがつま語 | 1190 | 1209 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E3%81%82%E3%81%8C%E3%81%A4%E3%81%BE%E8%AA%9E.zip) |
+| 13 | 東京方言辞典 | 1185 | 1185 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E6%9D%B1%E4%BA%AC%E6%96%B9%E8%A8%80.zip) |
+| 14 | 鳥取弁辞書 | 1045 | 1058 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E9%B3%A5%E5%8F%96%E5%BC%81.zip) |
+| 15 | 四日市市四郷地区方言 | 997 | 1014 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E5%9B%9B%E6%97%A5%E5%B8%82%E5%B8%82%E5%9B%9B%E9%83%B7%E5%9C%B0%E5%8C%BA%E6%96%B9%E8%A8%80.zip) |
+| 16 | 高松の方言 | 985 | 992 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E9%AB%98%E6%9D%BE%E3%81%AE%E6%96%B9%E8%A8%80.zip) |
+| 17 | 和歌山弁辞書 | 916 | 918 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E5%92%8C%E6%AD%8C%E5%B1%B1%E5%BC%81.zip) |
+| 18 | 京ことば | 881 | 898 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E4%BA%AC%E3%81%93%E3%81%A8%E3%81%B0.zip) |
+| 19 | 下北弁辞典 | 645 | 697 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E4%B8%8B%E5%8C%97%E5%BC%81.zip) |
+| 20 | 博多弁辞典 | 517 | 593 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E5%8D%9A%E5%A4%9A%E5%BC%81.zip) |
+| 21 | 名古屋弁辞典 | 416 | 420 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E5%90%8D%E5%8F%A4%E5%B1%8B%E5%BC%81.zip) |
+| 22 | 焼津の方言 | 258 | 267 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E7%84%BC%E6%B4%A5%E3%81%AE%E6%96%B9%E8%A8%80.zip) |
+| 23 | 下関弁辞典 | 242 | 252 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E4%B8%8B%E9%96%A2%E5%BC%81.zip) |
 
-1. 到 [Releases](https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/latest) 下载 `weblio-hokkaido-dialect-yomitan.zip`
-2. Yomitan → 设置 → Dictionaries → **Import** → 选择该 zip
+合計 **23 辞典 / 27602 見出し / 28818 検索語**。
+<!-- DICT-TABLE-END -->
 
-## 更新
+## インストール
 
-词典的 `index.json` 里带了 `isUpdatable` / `indexUrl` / `downloadUrl`，指向本仓库的 `releases/latest`。
-装好之后，在 Yomitan 的 **Dictionaries** 页面点 **Check for updates**，有新版就能一键升级，不用重新导入。
+1. 使いたい方言の zip をダウンロードする
+2. Yomitan の設定 →「辞書」→「辞書をインポート」で zip を選ぶ
+3. インポート後は `isUpdatable` に対応しているので、Yomitan から更新できます
 
-上游站点的内容由 GitHub Actions 每天抓一次（`.github/workflows/update.yml`）：内容有变动才会重新构建、提交并发一个新 Release；没变动就什么都不做，所以不会给用户推没意义的更新提示。
+## 使い方
 
-## 数据来源
+辞書の見出し語は、Weblio の索引に載っている表記（かな・漢字）をそのまま
+検索キーにしています。見出しに複数の表記がある語（例: 大阪弁「あほくさい、あほらしい」）
+は、どの表記でも引けます。
 
-词条来自 Weblio 的北海道方言辞書。站点按假名把词条分成 66 个索引页（`/category/dialect/hkdhj/aa` … `/y`），每个词条页面里释义位于 `<!--開始 北海道方言辞書 -->` 注释块内的 `<div class=Hkdhj>` 中：
+## このリポジトリの構成
+
+```
+dictionaries.json      取り込む方言辞典の定義（slug / コード / 書誌情報）
+src/fetch-data.mjs     Weblio をクロールして data/<slug>.json にスナップショット
+src/build.mjs          スナップショットから Yomitan 辞書（format 3）を生成
+src/publish.mjs        生成物を GitHub Releases に公開
+src/lib/parse.mjs      方言辞典ページ共通のパーサ
+src/lib/html.mjs       エンティティ解決・タグ除去などのヘルパ
+src/check-samples.mjs  保存済みサンプルに対してパーサを実行して確認
+data/<slug>.json       辞書ごとのスナップショット（git diff が更新履歴になる）
+dist/<slug>/           辞書ごとの index.json / term_bank_1.json / zip
+```
+
+## ビルド
+
+```bash
+node src/fetch-data.mjs            # 全辞書をクロール（初回は数時間かかります）
+node src/fetch-data.mjs --slug=osaka
+node src/fetch-data.mjs --offline  # 既存スナップショットの集計だけ表示
+node src/build.mjs                 # dist/<slug>/ を生成
+```
+
+生の HTML は `cache/<slug>/` に保存されるので、中断しても再実行時は
+キャッシュから読み直すだけで済みます（`cache/` は git 管理外）。
+
+## パーサについて
+
+Weblio の方言辞典はすべて同じページ骨格を持っています。
 
 ```html
-<h2 class=midashigo title="えばる">えばる</h2>
-<div class=Hkdhj>
-  <span class="ve">え<b>ば</b>・る</span>        <!-- 读音（<b> 标音调下降点） -->
-  <span class="not">【<a>威張る</a>】</span>      <!-- 漢字表記 -->
-  <span class="pos">[動<sub>ラ五</sub>]</span>   <!-- 品詞 -->
-  いばる。<span class="gnr">〈中〉</span>          <!-- 释义 + 地域 -->
+<div class="kiji">
+  <h2 class=midashigo title="読み">見出し</h2>
+  <div class=SlugCapitalised>…本文…</div>
 </div>
+<!--開始 北海道方言辞書--> … <!--終了 北海道方言辞書-->
 ```
 
-构建脚本先抓索引首页自动发现全部 66 个子索引页，再逐个抓取词条页解析出「读音 / 漢字表記 / 品詞 / 地域 / 解説」。
+一方で本文のマークアップは辞典ごとに違うため、`src/lib/parse.mjs` は
+3 つの形を自動判別します。
 
-## 构建
+| 形 | 例 | 扱い |
+| --- | --- | --- |
+| `spans` | 北海道方言辞書 | `<span class=ve/not/pos/gnr>` から読み・漢字・品詞・地域を取り出す |
+| `table` | 大阪弁・博多弁ほか大多数 | 表をそのまま Yomitan の structured-content の表にする |
+| `text` | あがつま語・鳥取弁辞書ほか | `<br>` を改行として素テキスト化する |
 
-```
-node src/fetch-data.mjs            # 联网抓取最新数据，写入 data/raw.json
-node src/build.mjs                 # 从 data/raw.json 构建 dist/
-```
+見出しの `・` は辞典によって意味が異なります（あがつま語では表記の区切り、
+博多弁では送り仮名の区切り）。`【漢字】` 注記の有無と索引ラベルへの一致で判別しています。
 
-产物在 `dist/`：`index.json`、`term_bank_1.json`、`weblio-hokkaido-dialect-yomitan.zip`。
-zip 的时间戳取自 revision 日期，内容不变时输出逐字节一致，方便 CI 判断有无变化。
+## ライセンス
 
-| 文件 | 作用 |
-| --- | --- |
-| `src/fetch-data.mjs` | 抓取索引与词条页，解析为 `data/raw.json` |
-| `src/build.mjs` | 归一化词条 → Yomitan term bank → 打包 |
-| `src/zip.mjs` | 无依赖的 deflate ZIP 写入器 |
-| `data/raw.json` | 上游数据快照（提交进仓库，diff 就是词典的变更记录） |
-| `dist/` | 构建产物（提交进仓库，供 CI 比对 revision） |
-
-## 词条处理
-
-Weblio 的索引会把同一个词按每种写法各列一次（假名 + 各个汉字写法），各自指向不同的 URL 但内容完全相同。构建时做了这些归一化：
-
-- 按「读音 + 品詞 + 解説」归并同一个词的多种写法，`えばる` / `威張る` 合并成一条
-- 漢字表記字段里的并列写法（`・` 分隔）与送假名括注（`口取(り)`、`骨付(き)ざんぎ`）展开成 `口取り`、`骨付きざんぎ` 等独立词头
-- 每个汉字写法都作为**独立的可检索词头**收录，查假名或查汉字都能命中同一条释义
-- 读音里的音调记号（`・` 下降点、`△`）在生成检索键时清除，但表头照常显示
-
-1270 条原始词条 → 736 个词 → 1315 个可检索词头。
-
-## 版权
-
-词条内容版权归 [Weblio 北海道方言辞書](https://www.weblio.jp/cat/dialect/hkdhj) 所有，本仓库只做格式转换。构建脚本本身可自由使用。
+各辞典の本文は Weblio および各辞典の提供者に帰属します。このリポジトリは
+Weblio の公開ページを Yomitan で引けるように整形したものです。

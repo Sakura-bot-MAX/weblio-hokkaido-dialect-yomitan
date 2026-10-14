@@ -1,4 +1,2 @@
-# Normalize line endings to LF so rebuilds diff cleanly on any platform.
 * text=auto eol=lf
-*.zip binary
-*.png binary
+dist/**/*.zip binary

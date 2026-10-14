@@ -1,0 +1,11 @@
+{
+  "title": "Weblio奥豊後の言葉",
+  "revision": "2026-10-13",
+  "format": 3,
+  "author": "豊語林",
+  "url": "https://www.weblio.jp/cat/dialect/bngrn",
+  "description": "奥豊後の言葉（Weblio）の全項目を収録した方言辞典です。",
+  "isUpdatable": true,
+  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/bngrn/index.json",
+  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/bngrn/weblio-bngrn-dialect-yomitan.zip"
+}
