@@ -28,14 +28,18 @@ function crc32(buf) {
 
 // MS-DOS date/time, as used by the ZIP format. `date` is a JS Date or an
 // ISO-ish string ("YYYY-MM-DD"); invalid input falls back to 1980-01-01.
+//
+// Everything is read in UTC: using the local-time getters made the archive
+// bytes depend on the machine's timezone, so a build on a UTC runner and a
+// build on a UTC+8 workstation disagreed even though the contents matched.
 function dosDateTime(input) {
   const d = input instanceof Date ? input : new Date(String(input));
   if (Number.isNaN(d.getTime())) return { time: 0, date: 33 }; // 1980-01-01
-  const year = Math.max(1980, d.getFullYear());
+  const year = Math.max(1980, d.getUTCFullYear());
   return {
     time:
-      (d.getHours() << 11) | (d.getMinutes() << 5) | Math.floor(d.getSeconds() / 2),
-    date: ((year - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate(),
+      (d.getUTCHours() << 11) | (d.getUTCMinutes() << 5) | Math.floor(d.getUTCSeconds() / 2),
+    date: ((year - 1980) << 9) | ((d.getUTCMonth() + 1) << 5) | d.getUTCDate(),
   };
 }
 
