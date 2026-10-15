@@ -2,6 +2,7 @@
 //
 //   GITHUB_TOKEN=... node src/publish.mjs
 //   GITHUB_TOKEN=... node src/publish.mjs --slug=osaka
+//   GITHUB_TOKEN=... node src/publish.mjs --force      # re-upload everything
 //
 // Every dictionary lives on its own release tag (the slug), so Yomitan's
 // self-update URLs stay stable:
@@ -9,8 +10,12 @@
 //   .../releases/download/<slug>/index.json
 //   .../releases/download/<slug>/weblio-<slug>-dialect-yomitan.zip
 //
-// dist/published.json records the revision that is currently online, so an
-// unchanged dictionary is never re-uploaded.
+// dist/published.json records the repository and revision that are currently
+// online, so an unchanged dictionary is never re-uploaded.
+//
+// The repository name is part of that record on purpose: index.json embeds its
+// own release URLs, so renaming the repository invalidates every published
+// asset even though the upstream data has not changed by a single byte.
 
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -92,7 +97,20 @@ const published = existsSync(publishedPath)
 
 const all = JSON.parse(readFileSync(join(ROOT, "dictionaries.json"), "utf8"));
 const slugArg = process.argv.find((a) => a.startsWith("--slug="));
+const force = process.argv.includes("--force");
 const targets = slugArg ? all.filter((d) => d.slug === slugArg.split("=")[1]) : all;
+
+// `entry` is { repo, revision }. Records written by older versions were a bare
+// revision string; those never match, so the dictionary is republished once and
+// upgraded to the current shape.
+function isCurrent(entry, revision) {
+  return (
+    entry !== null &&
+    typeof entry === "object" &&
+    entry.repo === REPO &&
+    entry.revision === revision
+  );
+}
 
 for (const dict of targets) {
   const dir = join(ROOT, "dist", dict.slug);
@@ -103,7 +121,7 @@ for (const dict of targets) {
     continue;
   }
   const index = JSON.parse(readFileSync(indexPath, "utf8"));
-  if (published[dict.slug] === index.revision) {
+  if (!force && isCurrent(published[dict.slug], index.revision)) {
     console.log(`${dict.slug.padEnd(8)} up to date (rev ${index.revision})`);
     continue;
   }
@@ -111,7 +129,7 @@ for (const dict of targets) {
   const release = await ensureRelease(dict.slug);
   await replaceAsset(release, "index.json", readFileSync(indexPath));
   await replaceAsset(release, `weblio-${dict.slug}-dialect-yomitan.zip`, readFileSync(zipPath));
-  published[dict.slug] = index.revision;
+  published[dict.slug] = { repo: REPO, revision: index.revision };
   console.log(`${dict.slug.padEnd(8)} published rev ${index.revision}`);
 }
 
