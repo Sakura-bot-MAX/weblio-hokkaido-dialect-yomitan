@@ -47,11 +47,14 @@ jobs:
       - name: Build dictionaries
         run: node src/build.mjs
 
+      - name: Refresh README catalogue
+        run: node src/index-md.mjs
+
       - name: Commit snapshots and builds
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data dist
+          git add data dist output README.md README.ja.md
           if git diff --cached --quiet; then
             echo "nothing changed"
           else

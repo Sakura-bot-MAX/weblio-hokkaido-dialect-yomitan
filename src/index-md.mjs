@@ -1,6 +1,9 @@
 // Write output/README.md: a catalogue of every built dialect dictionary.
-// Also injects the catalogue table into the root README.md between the
-// <!-- DICT-TABLE-START --> / <!-- DICT-TABLE-END --> markers.
+//
+// Also injects the catalogue table into the root READMEs between the
+// <!-- DICT-TABLE-START --> / <!-- DICT-TABLE-END --> markers. README.md is
+// English (it is what GitHub shows first) and README.ja.md is Japanese; both
+// are regenerated from the same rows so they cannot drift apart.
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,66 +19,99 @@ for (const d of dicts) {
   const raw = JSON.parse(readFileSync(join(ROOT, "data", `${d.slug}.json`), "utf8"));
   totalEntries += raw.count;
   totalTerms += tb.length;
-  rows.push({ slug: d.slug, name: d.name, title: d.title, entries: raw.count, terms: tb.length, rev: raw.revision });
+  rows.push({
+    slug: d.slug,
+    name: d.name,
+    nameEn: d.nameEn,
+    regionEn: d.regionEn,
+    title: d.title,
+    entries: raw.count,
+    terms: tb.length,
+    rev: raw.revision,
+  });
 }
 rows.sort((a, b) => b.terms - a.terms);
 
-const lines = [];
-lines.push("# Weblio 方言辞典 Yomitan 版（全 23 種）");
-lines.push("");
-lines.push("来源：https://www.weblio.jp/cat/dialect ｜ 格式：Yomitan / Yomichan (format 3)");
-lines.push("");
-lines.push("| # | 辞典 | 收录音项 | 检索词条 | 快照版本 |");
-lines.push("|---|---|---|---|---|");
+const zipLink = (r) => `[zip](output/${encodeURI(`[JA-JA Dialect] ${r.title}.zip`)})`;
+const fmt = (n) => n.toLocaleString("en-US");
+
+// --- output/README.md -------------------------------------------------------
+
+const out = [];
+out.push("# Weblio Dialect Dictionaries — Yomitan edition (all 23)");
+out.push("");
+out.push("Source: <https://www.weblio.jp/cat/dialect> | Format: Yomitan / Yomichan (format 3)");
+out.push("");
+out.push("| # | Dictionary | Region | Headwords | Lookup terms | Snapshot |");
+out.push("|---|---|---|---|---|---|");
 rows.forEach((r, i) => {
-  lines.push(`| ${i + 1} | ${r.name} | ${r.entries} | ${r.terms} | ${r.rev} |`);
+  out.push(`| ${i + 1} | ${r.name} (${r.nameEn}) | ${r.regionEn} | ${fmt(r.entries)} | ${fmt(r.terms)} | ${r.rev} |`);
 });
-lines.push("");
-lines.push(`合计：23 部辞典，${totalEntries} 条音项，${totalTerms} 个检索词条。`);
-lines.push("");
-lines.push("## 安装方法（Yomitan / Yomichan）");
-lines.push("");
-lines.push("1. 打开 Yomitan 设置 → 辞書 → 导入（Import）");
-lines.push("2. 选择本目录下任意一个 `[JA-JA Dialect] Weblio….zip`（可多选/全选）");
-lines.push("3. 等待索引完成即可查询");
-lines.push("");
-lines.push("每个 zip 内含 `index.json`、`term_bank_1.json`、`icon.png`，已配置 `isUpdatable` 自更新字段（发布到 GitHub Release 后生效）。");
-lines.push("");
+out.push("");
+out.push(`Total: 23 dictionaries, ${fmt(totalEntries)} headwords, ${fmt(totalTerms)} lookup terms.`);
+out.push("");
+out.push("## Install (Yomitan / Yomichan)");
+out.push("");
+out.push("1. Open Yomitan settings → Dictionaries → Import");
+out.push("2. Pick any `[JA-JA Dialect] Weblio….zip` from this folder (you can select several at once)");
+out.push("3. Wait for the index to finish, then look words up");
+out.push("");
+out.push("Each zip contains `index.json`, `term_bank_1.json` and `icon.png`, and declares");
+out.push("`isUpdatable` so Yomitan can update it in place once it is published to a GitHub release.");
+out.push("");
 
-const md = lines.join("\n");
-writeFileSync(join(ROOT, "output", "README.md"), md);
-console.log(md);
+writeFileSync(join(ROOT, "output", "README.md"), out.join("\n"));
+console.log(out.join("\n"));
 
-// --- root README.md table injection -----------------------------------------
-const README = join(ROOT, "README.md");
-if (existsSync(README)) {
-  const START = "<!-- DICT-TABLE-START -->";
-  const END = "<!-- DICT-TABLE-END -->";
+// --- root README table injection -------------------------------------------
 
-  const t = [];
-  t.push("| # | 辞典 | 見出し数 | 検索語数 | スナップショット | ダウンロード |");
-  t.push("|---|---|---|---|---|---|");
+const START = "<!-- DICT-TABLE-START -->";
+const END = "<!-- DICT-TABLE-END -->";
+
+const TARGETS = [
+  {
+    file: "README.md",
+    header: "| # | Dictionary | Region | Headwords | Lookup terms | Snapshot | Download |",
+    total: `**23 dictionaries / ${fmt(totalEntries)} headwords / ${fmt(totalTerms)} lookup terms** in total.`,
+    cell: (r) => `${r.name} (${r.nameEn})`,
+    num: fmt,
+  },
+  {
+    file: "README.ja.md",
+    header: "| # | 辞典 | 地域 | 見出し数 | 検索語数 | スナップショット | ダウンロード |",
+    total: `合計 **23 辞典 / ${totalEntries} 見出し / ${totalTerms} 検索語**。`,
+    cell: (r) => `${r.name}（${r.nameEn}）`,
+    num: (n) => String(n),
+  },
+];
+
+for (const t of TARGETS) {
+  const path = join(ROOT, t.file);
+  if (!existsSync(path)) {
+    console.warn(`${t.file}: not found, skipped`);
+    continue;
+  }
+
+  const lines = [t.header, "|---|---|---|---|---|---|---|"];
   rows.forEach((r, i) => {
-    const file = `[zip](output/${encodeURI(`[JA-JA Dialect] ${r.title}.zip`)})`;
-    t.push(`| ${i + 1} | ${r.name} | ${r.entries} | ${r.terms} | ${r.rev} | ${file} |`);
+    lines.push(`| ${i + 1} | ${t.cell(r)} | ${r.regionEn} | ${t.num(r.entries)} | ${t.num(r.terms)} | ${r.rev} | ${zipLink(r)} |`);
   });
-  t.push("");
-  t.push(`合計 **23 辞典 / ${totalEntries} 見出し / ${totalTerms} 検索語**。`);
-  const table = t.join("\n");
+  lines.push("");
+  lines.push(t.total);
+  const table = lines.join("\n");
 
-  const src = readFileSync(README, "utf8");
+  const src = readFileSync(path, "utf8");
   const a = src.indexOf(START);
   const b = src.indexOf(END);
-  if (a !== -1 && b !== -1 && b > a) {
-    const next =
-      src.slice(0, a + START.length) + "\n" + table + "\n" + src.slice(b);
-    if (next !== src) {
-      writeFileSync(README, next);
-      console.log("README.md: catalogue table updated");
-    } else {
-      console.log("README.md: catalogue table unchanged");
-    }
+  if (a === -1 || b === -1 || b <= a) {
+    console.warn(`${t.file}: markers not found, table not injected`);
+    continue;
+  }
+  const next = src.slice(0, a + START.length) + "\n" + table + "\n" + src.slice(b);
+  if (next !== src) {
+    writeFileSync(path, next);
+    console.log(`${t.file}: catalogue table updated`);
   } else {
-    console.warn("README.md: markers not found, table not injected");
+    console.log(`${t.file}: catalogue table unchanged`);
   }
 }

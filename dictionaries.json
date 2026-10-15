@@ -3,184 +3,230 @@
     "slug": "hkdhj",
     "code": "HKDHJ",
     "name": "北海道方言辞書",
+    "nameEn": "Hokkaido Dialect Dictionary",
     "title": "Weblio北海道方言",
     "author": "北海道方言辞書",
+    "regionEn": "Hokkaido",
     "description": "北海道方言辞書（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "smkbj",
     "code": "SMKBJ",
     "name": "下北弁辞典",
+    "nameEn": "Shimokita Dialect Dictionary",
     "title": "Weblio下北弁",
     "author": "下北弁辞典",
+    "regionEn": "Aomori (Shimokita)",
     "description": "下北弁辞典（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "tgrgj",
     "code": "TGRGJ",
     "name": "津軽語辞典",
+    "nameEn": "Tsugaru Dialect Dictionary",
     "title": "Weblio津軽語",
     "author": "津軽語辞典",
+    "regionEn": "Aomori (Tsugaru)",
     "description": "津軽語辞典（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "sndib",
     "code": "SNDIB",
     "name": "仙台弁",
+    "nameEn": "Sendai Dialect",
     "title": "Weblio仙台弁",
     "author": "仙台名取弁",
+    "regionEn": "Miyagi",
     "description": "仙台名取弁（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "ikbdj",
     "code": "IKBDJ",
     "name": "茨城弁大辞典",
+    "nameEn": "Ibaraki Dialect Dictionary",
     "title": "Weblio茨城弁",
     "author": "茨城王",
+    "regionEn": "Ibaraki",
     "description": "茨城弁大辞典（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "aasmg",
     "code": "AASMG",
     "name": "あがつま語",
+    "nameEn": "Agatsuma Dialect",
     "title": "Weblioあがつま語",
     "author": "あがつま語☆実用会話講座",
+    "regionEn": "Gunma (Agatsuma)",
     "description": "あがつま語☆実用会話講座（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "tkyhg",
     "code": "TKYHG",
     "name": "東京方言辞典",
+    "nameEn": "Tokyo Dialect Dictionary",
     "title": "Weblio東京方言",
     "author": "東京方言辞典",
+    "regionEn": "Tokyo",
     "description": "東京方言辞典（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "tgmhg",
     "code": "TGMHG",
     "name": "新潟県田上町方言",
+    "nameEn": "Tagami Dialect",
     "title": "Weblio新潟県田上町方言",
     "author": "新潟県田上町の方言",
+    "regionEn": "Niigata (Tagami)",
     "description": "新潟県田上町の方言（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "uodbj",
     "code": "UODBJ",
     "name": "魚津弁",
+    "nameEn": "Uozu Dialect",
     "title": "Weblio魚津弁",
     "author": "魚津弁",
+    "regionEn": "Toyama (Uozu)",
     "description": "魚津弁（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "ksbjt",
     "code": "KSBJT",
     "name": "甲州弁辞典",
+    "nameEn": "Koshu Dialect Dictionary",
     "title": "Weblio甲州弁",
     "author": "うっち～の甲州弁研究所",
+    "regionEn": "Yamanashi",
     "description": "甲州弁辞典（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "nagya",
     "code": "NAGYA",
     "name": "名古屋弁辞典",
+    "nameEn": "Nagoya Dialect Dictionary",
     "title": "Weblio名古屋弁",
     "author": "世界最強なごやべん大辞典",
+    "regionEn": "Aichi (Nagoya)",
     "description": "世界最強なごやべん大辞典（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "yznhg",
     "code": "YZNHG",
     "name": "焼津の方言",
+    "nameEn": "Yaizu Dialect",
     "title": "Weblio焼津の方言",
     "author": "焼津市歴史民俗資料館",
+    "regionEn": "Shizuoka (Yaizu)",
     "description": "焼津の方言（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "ykich",
     "code": "YKICH",
     "name": "四日市市四郷地区方言",
+    "nameEn": "Yokkaichi Shigo Dialect",
     "title": "Weblio四日市市四郷地区方言",
     "author": "四日市市四郷地区方言",
+    "regionEn": "Mie (Yokkaichi)",
     "description": "四日市市四郷地区方言（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "kyktb",
     "code": "KYKTB",
     "name": "京ことば",
+    "nameEn": "Kyo-kotoba",
     "title": "Weblio京ことば",
     "author": "京ことば",
+    "regionEn": "Kyoto",
     "description": "京ことば（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "tjmhg",
     "code": "TJMHG",
     "name": "但馬方言辞典",
+    "nameEn": "Tajima Dialect Dictionary",
     "title": "Weblio但馬方言",
     "author": "但馬方言のページ",
+    "regionEn": "Hyogo (Tajima)",
     "description": "但馬方言辞典（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "osaka",
     "code": "OSAKA",
     "name": "大阪弁",
+    "nameEn": "Osaka Dialect",
     "title": "Weblio大阪弁",
     "author": "全国大阪弁普及協会",
+    "regionEn": "Osaka",
     "description": "大阪市内を中心に話され、全国的な認知度も高い大阪弁について解説しています。"
   },
   {
     "slug": "wkybj",
     "code": "WKYBJ",
     "name": "和歌山弁辞書",
+    "nameEn": "Wakayama Dialect Dictionary",
     "title": "Weblio和歌山弁",
     "author": "和歌山弁Explorer",
+    "regionEn": "Wakayama",
     "description": "和歌山弁辞書（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "ttorb",
     "code": "TTORB",
     "name": "鳥取弁辞書",
+    "nameEn": "Tottori Dialect Dictionary",
     "title": "Weblio鳥取弁",
     "author": "鳥取弁辞書",
+    "regionEn": "Tottori",
     "description": "鳥取弁辞書（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "smsbj",
     "code": "SMSBJ",
     "name": "下関弁辞典",
+    "nameEn": "Shimonoseki Dialect Dictionary",
     "title": "Weblio下関弁",
     "author": "下関弁辞典",
+    "regionEn": "Yamaguchi (Shimonoseki)",
     "description": "下関弁辞典（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "tkmhg",
     "code": "TKMHG",
     "name": "高松の方言",
+    "nameEn": "Takamatsu Dialect",
     "title": "Weblio高松の方言",
     "author": "高松市歴史資料館",
+    "regionEn": "Kagawa (Takamatsu)",
     "description": "高松の方言（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "hktbn",
     "code": "HKTBN",
     "name": "博多弁辞典",
+    "nameEn": "Hakata Dialect Dictionary",
     "title": "Weblio博多弁",
     "author": "博多弁推進会",
+    "regionEn": "Fukuoka (Hakata)",
     "description": "博多弁辞典（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "bngrn",
     "code": "BNGRN",
     "name": "奥豊後の言葉",
+    "nameEn": "Oku-Bungo Dialect",
     "title": "Weblio奥豊後の言葉",
     "author": "豊語林",
+    "regionEn": "Oita (Bungo)",
     "description": "奥豊後の言葉（Weblio）の全項目を収録した方言辞典です。"
   },
   {
     "slug": "okndh",
     "code": "OKNDH",
     "name": "沖縄大百科",
+    "nameEn": "Okinawa Encyclopedia",
     "title": "Weblio沖縄大百科",
     "author": "ウルマックス",
+    "regionEn": "Okinawa",
     "description": "沖縄大百科（Weblio）の全項目を収録した方言辞典です。"
   }
 ]
