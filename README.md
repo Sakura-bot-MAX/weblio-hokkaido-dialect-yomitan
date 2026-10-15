@@ -1,7 +1,5 @@
 # Weblio Dialect Dictionaries → Yomitan
 
-English | [日本語](README.ja.md)
-
 Yomitan dictionaries built from **every** dialect dictionary in Weblio's
 [dialect category](https://www.weblio.jp/cat/dialect) — 23 dictionaries covering
 22 of Japan's 47 prefectures. Each one ships as a single zip you can import

@@ -1,9 +1,8 @@
 // Write output/README.md: a catalogue of every built dialect dictionary.
 //
-// Also injects the catalogue table into the root READMEs between the
-// <!-- DICT-TABLE-START --> / <!-- DICT-TABLE-END --> markers. README.md is
-// English (it is what GitHub shows first) and README.ja.md is Japanese; both
-// are regenerated from the same rows so they cannot drift apart.
+// Also injects the catalogue table into the root README.md between the
+// <!-- DICT-TABLE-START --> / <!-- DICT-TABLE-END --> markers, so the table
+// cannot drift from the snapshots.
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -68,50 +67,33 @@ console.log(out.join("\n"));
 const START = "<!-- DICT-TABLE-START -->";
 const END = "<!-- DICT-TABLE-END -->";
 
-const TARGETS = [
-  {
-    file: "README.md",
-    header: "| # | Dictionary | Region | Headwords | Lookup terms | Snapshot | Download |",
-    total: `**23 dictionaries / ${fmt(totalEntries)} headwords / ${fmt(totalTerms)} lookup terms** in total.`,
-    cell: (r) => `${r.name} (${r.nameEn})`,
-    num: fmt,
-  },
-  {
-    file: "README.ja.md",
-    header: "| # | 辞典 | 地域 | 見出し数 | 検索語数 | スナップショット | ダウンロード |",
-    total: `合計 **23 辞典 / ${totalEntries} 見出し / ${totalTerms} 検索語**。`,
-    cell: (r) => `${r.name}（${r.nameEn}）`,
-    num: (n) => String(n),
-  },
-];
-
-for (const t of TARGETS) {
-  const path = join(ROOT, t.file);
-  if (!existsSync(path)) {
-    console.warn(`${t.file}: not found, skipped`);
-    continue;
-  }
-
-  const lines = [t.header, "|---|---|---|---|---|---|---|"];
+const README = join(ROOT, "README.md");
+if (!existsSync(README)) {
+  console.warn("README.md: not found, table not injected");
+} else {
+  const lines = [
+    "| # | Dictionary | Region | Headwords | Lookup terms | Snapshot | Download |",
+    "|---|---|---|---|---|---|---|",
+  ];
   rows.forEach((r, i) => {
-    lines.push(`| ${i + 1} | ${t.cell(r)} | ${r.regionEn} | ${t.num(r.entries)} | ${t.num(r.terms)} | ${r.rev} | ${zipLink(r)} |`);
+    lines.push(`| ${i + 1} | ${r.name} (${r.nameEn}) | ${r.regionEn} | ${fmt(r.entries)} | ${fmt(r.terms)} | ${r.rev} | ${zipLink(r)} |`);
   });
   lines.push("");
-  lines.push(t.total);
+  lines.push(`**23 dictionaries / ${fmt(totalEntries)} headwords / ${fmt(totalTerms)} lookup terms** in total.`);
   const table = lines.join("\n");
 
-  const src = readFileSync(path, "utf8");
+  const src = readFileSync(README, "utf8");
   const a = src.indexOf(START);
   const b = src.indexOf(END);
   if (a === -1 || b === -1 || b <= a) {
-    console.warn(`${t.file}: markers not found, table not injected`);
-    continue;
-  }
-  const next = src.slice(0, a + START.length) + "\n" + table + "\n" + src.slice(b);
-  if (next !== src) {
-    writeFileSync(path, next);
-    console.log(`${t.file}: catalogue table updated`);
+    console.warn("README.md: markers not found, table not injected");
   } else {
-    console.log(`${t.file}: catalogue table unchanged`);
+    const next = src.slice(0, a + START.length) + "\n" + table + "\n" + src.slice(b);
+    if (next !== src) {
+      writeFileSync(README, next);
+      console.log("README.md: catalogue table updated");
+    } else {
+      console.log("README.md: catalogue table unchanged");
+    }
   }
 }
