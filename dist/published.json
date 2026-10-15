@@ -1,25 +1,94 @@
 {
-  "hkdhj": "2026-10-13",
-  "smkbj": "2026-10-13",
-  "tgrgj": "2026-10-13",
-  "sndib": "2026-10-13",
-  "ikbdj": "2026-10-13",
-  "aasmg": "2026-10-13",
-  "tkyhg": "2026-10-13",
-  "tgmhg": "2026-10-13",
-  "uodbj": "2026-10-13",
-  "ksbjt": "2026-10-13",
-  "nagya": "2026-10-13",
-  "yznhg": "2026-10-13",
-  "ykich": "2026-10-13",
-  "kyktb": "2026-10-13",
-  "tjmhg": "2026-10-13",
-  "osaka": "2026-10-13",
-  "wkybj": "2026-10-13",
-  "ttorb": "2026-10-13",
-  "smsbj": "2026-10-13",
-  "tkmhg": "2026-10-13",
-  "hktbn": "2026-10-13",
-  "bngrn": "2026-10-13",
-  "okndh": "2026-10-13"
+  "hkdhj": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "smkbj": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "tgrgj": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "sndib": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "ikbdj": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "aasmg": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "tkyhg": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "tgmhg": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "uodbj": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "ksbjt": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "nagya": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "yznhg": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "ykich": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "kyktb": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "tjmhg": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "osaka": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "wkybj": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "ttorb": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "smsbj": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "tkmhg": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "hktbn": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "bngrn": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  },
+  "okndh": {
+    "repo": "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan",
+    "revision": "2026-10-13"
+  }
 }
