@@ -6,6 +6,6 @@
   "url": "https://www.weblio.jp/cat/dialect/smkbj",
   "description": "下北弁辞典（Weblio）の全項目を収録した方言辞典です。",
   "isUpdatable": true,
-  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/smkbj/index.json",
-  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/smkbj/weblio-smkbj-dialect-yomitan.zip"
+  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/smkbj/index.json",
+  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/smkbj/weblio-smkbj-dialect-yomitan.zip"
 }

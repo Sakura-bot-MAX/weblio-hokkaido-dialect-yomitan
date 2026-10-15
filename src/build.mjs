@@ -21,7 +21,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const REPO =
   process.env.YOMITAN_REPO ||
   process.env.GITHUB_REPOSITORY ||
-  "Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan";
+  "Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries";
 
 // --- helpers --------------------------------------------------------------
 

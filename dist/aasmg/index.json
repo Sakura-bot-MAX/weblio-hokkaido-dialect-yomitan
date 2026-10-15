@@ -6,6 +6,6 @@
   "url": "https://www.weblio.jp/cat/dialect/aasmg",
   "description": "あがつま語☆実用会話講座（Weblio）の全項目を収録した方言辞典です。",
   "isUpdatable": true,
-  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/aasmg/index.json",
-  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/aasmg/weblio-aasmg-dialect-yomitan.zip"
+  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/aasmg/index.json",
+  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/aasmg/weblio-aasmg-dialect-yomitan.zip"
 }

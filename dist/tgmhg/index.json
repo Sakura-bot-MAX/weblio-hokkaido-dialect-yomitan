@@ -6,6 +6,6 @@
   "url": "https://www.weblio.jp/cat/dialect/tgmhg",
   "description": "新潟県田上町の方言（Weblio）の全項目を収録した方言辞典です。",
   "isUpdatable": true,
-  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/tgmhg/index.json",
-  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-hokkaido-dialect-yomitan/releases/download/tgmhg/weblio-tgmhg-dialect-yomitan.zip"
+  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/tgmhg/index.json",
+  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/tgmhg/weblio-tgmhg-dialect-yomitan.zip"
 }
