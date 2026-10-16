@@ -29,7 +29,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /**
  * Assemble one term_bank out of every per-dialect snapshot.
- * @param {{slug: string, name: string, regionEn?: string}[]} dicts
+ * @param {{slug: string, name: string}[]} dicts
  */
 export function buildMerged(dicts) {
   const terms = [];
@@ -46,9 +46,11 @@ export function buildMerged(dicts) {
     const rev = raw.revision || "";
     if (rev > revision) revision = rev;
 
-    // Two tags per entry: the dictionary it came from and its region, so
-    // Yomitan's tag filter can narrow the combined dictionary down to either.
-    const tags = [dict.name, dict.regionEn].filter(Boolean).join(",");
+    // One tag per entry: the Japanese name of the dictionary it came from, so
+    // Yomitan's tag filter can narrow the combined dictionary down to a single
+    // dialect. Those names already say which region they cover (大阪弁,
+    // 北海道方言辞書, 下北弁辞典, …), so no second, English tag is needed.
+    const tags = dict.name;
 
     const merged = mergeForms(raw.entries || []);
     let count = 0;

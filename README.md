@@ -31,9 +31,10 @@ from:
 
 - the definition header gains a `〔大阪弁〕`-style label naming the source
   dictionary;
-- each entry carries two Yomitan definition tags — the dictionary name
-  (大阪弁, 北海道方言辞書, …) and its region (Osaka, Hokkaido, …) — so Yomitan's
-  tag filter can narrow the combined dictionary down to a single dialect.
+- each entry carries one Yomitan definition tag — the Japanese name of that
+  dictionary (大阪弁, 北海道方言辞書, …) — so Yomitan's tag filter can narrow the
+  combined dictionary down to a single dialect. The names already say which
+  region they cover, so no separate region tag is added.
 
 Because it already contains everything, installing the combined edition *and*
 the per-dialect zips at once is pointless: Yomitan would show every word twice.
@@ -70,7 +71,7 @@ Pick one edition.
 
 **23 dictionaries / 27,602 headwords / 28,818 lookup terms** in total.
 
-**Combined edition:** [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E6%96%B9%E8%A8%80%E8%BE%9E%E5%85%B8%20%E7%B5%B1%E5%90%88%E7%89%88.zip) — all 28,818 lookup terms in a single dictionary (23 source dictionaries, 1913 KiB, snapshot 2026-10-13). Every entry carries the name of the dialect it came from.
+**Combined edition:** [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E6%96%B9%E8%A8%80%E8%BE%9E%E5%85%B8%20%E7%B5%B1%E5%90%88%E7%89%88.zip) — all 28,818 lookup terms in a single dictionary (23 source dictionaries, 1908 KiB, snapshot 2026-10-13). Every entry carries the name of the dialect it came from.
 <!-- DICT-TABLE-END -->
 
 ## Install

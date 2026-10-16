@@ -20,7 +20,6 @@ export const MERGED = {
   slug: MERGED_SLUG,
   title: "Weblio方言辞典 統合版",
   author: "Weblio dialect dictionaries (23 titles combined)",
-  regionEn: "Japan (23 dictionaries)",
   description:
     "23 部の Weblio 方言辞典を 1 冊にまとめた統合版です。各項目には出典の辞典名が付きます。",
   url: "https://www.weblio.jp/cat/dialect",
