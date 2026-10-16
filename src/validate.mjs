@@ -2,15 +2,21 @@
 // came out empty, and which body shape they used.
 //
 //   node src/validate.mjs
+//
+// The combined edition (dist/all/) is checked afterwards: its term count must
+// equal the sum of the per-dialect builds, otherwise the merge dropped or
+// duplicated something.
 
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { MERGED, zipNameFor } from "./merged.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dicts = JSON.parse(readFileSync(join(ROOT, "dictionaries.json"), "utf8"));
 
 let grand = 0;
+let grandTerms = 0;
 const problems = [];
 
 console.log(
@@ -52,6 +58,7 @@ for (const d of dicts) {
   }
 
   grand += entries.length;
+  grandTerms += terms;
   console.log(
     `${d.slug.padEnd(8)} ${String(entries.length).padStart(6)} ${String(words).padStart(6)} ` +
       `${String(terms).padStart(6)} ${String(empty).padStart(6)}  ` +
@@ -59,7 +66,47 @@ for (const d of dicts) {
   );
 }
 
-console.log(`\nTOTAL ${grand} entries`);
+console.log(`\nTOTAL ${grand} entries, ${grandTerms} terms in ${dicts.length} dictionaries`);
+
+// --- combined edition -------------------------------------------------------
+
+const mergedDir = join(ROOT, "dist", MERGED.slug);
+const mergedIndexPath = join(mergedDir, "index.json");
+if (!existsSync(mergedIndexPath)) {
+  console.log(`\n${MERGED.slug}: not built (run node src/build-merged.mjs)`);
+} else {
+  const index = JSON.parse(readFileSync(mergedIndexPath, "utf8"));
+  const tb = JSON.parse(readFileSync(join(mergedDir, "term_bank_1.json"), "utf8"));
+  const zipPath = join(mergedDir, zipNameFor(MERGED.slug));
+  const zipKb = existsSync(zipPath) ? Math.round(readFileSync(zipPath).length / 1024) : 0;
+  const sources = new Set(tb.map((t) => t[2].split(",")[0]));
+  const unlabelled = tb.filter((t) => !t[2] || !/〔/.test(JSON.stringify(t[5]))).length;
+
+  console.log(
+    `\n${MERGED.slug.padEnd(8)} ${String(tb.length).padStart(6)} terms  ` +
+      `${String(sources.size).padStart(3)} source dictionaries  ${zipKb} KiB  rev ${index.revision}`,
+  );
+
+  const checks = [];
+  if (tb.length !== grandTerms) {
+    checks.push(`term count ${tb.length} != sum of per-dialect builds ${grandTerms}`);
+  }
+  if (sources.size !== dicts.length) {
+    checks.push(`only ${sources.size} of ${dicts.length} dictionaries are represented`);
+  }
+  if (unlabelled) checks.push(`${unlabelled} terms have no source label or tag`);
+  if (index.format !== 3) checks.push(`format is ${index.format}, expected 3`);
+  if (!index.isUpdatable || !index.indexUrl || !index.downloadUrl) {
+    checks.push("index.json is missing the self-update fields");
+  }
+  if (checks.length) {
+    console.log("  PROBLEMS:");
+    for (const c of checks) console.log(`    - ${c}`);
+  } else {
+    console.log("  ok: matches the per-dialect builds term for term");
+  }
+}
+
 if (problems.length) {
   console.log(`\nentries without a definition (${problems.length}):`);
   for (const p of problems) console.log("  " + p);

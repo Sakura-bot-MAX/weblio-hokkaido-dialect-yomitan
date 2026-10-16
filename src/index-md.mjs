@@ -3,9 +3,13 @@
 // Also injects the catalogue table into the root README.md between the
 // <!-- DICT-TABLE-START --> / <!-- DICT-TABLE-END --> markers, so the table
 // cannot drift from the snapshots.
+//
+// The combined edition (dist/all/) is described from its own build output, so
+// its size and term count in the READMEs stay honest too.
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { MERGED, zipNameFor } from "./merged.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dicts = JSON.parse(readFileSync(join(ROOT, "dictionaries.json"), "utf8"));
@@ -34,12 +38,47 @@ rows.sort((a, b) => b.terms - a.terms);
 const zipLink = (r) => `[zip](output/${encodeURI(`[JA-JA Dialect] ${r.title}.zip`)})`;
 const fmt = (n) => n.toLocaleString("en-US");
 
+// --- combined edition stats -------------------------------------------------
+
+const mergedFile = `[JA-JA Dialect] ${MERGED.title}.zip`;
+const mergedDir = join(ROOT, "dist", MERGED.slug);
+const merged = { built: false };
+if (existsSync(join(mergedDir, "term_bank_1.json"))) {
+  const tb = JSON.parse(readFileSync(join(mergedDir, "term_bank_1.json"), "utf8"));
+  const index = JSON.parse(readFileSync(join(mergedDir, "index.json"), "utf8"));
+  const zipPath = join(mergedDir, zipNameFor(MERGED.slug));
+  merged.built = true;
+  merged.terms = tb.length;
+  merged.rev = index.revision;
+  merged.kb = existsSync(zipPath) ? Math.round(readFileSync(zipPath).length / 1024) : 0;
+  merged.sources = new Set(tb.map((t) => t[2].split(",")[0])).size;
+  merged.link = `[zip](output/${encodeURI(mergedFile)})`;
+}
+const mergedNote = merged.built
+  ? `${merged.link} — all ${fmt(merged.terms)} lookup terms in a single dictionary ` +
+    `(${fmt(merged.sources)} source dictionaries, ${merged.kb} KiB, snapshot ${merged.rev}). ` +
+    `Every entry carries the name of the dialect it came from.`
+  : "not built yet (`node src/build-merged.mjs`).";
+
 // --- output/README.md -------------------------------------------------------
 
 const out = [];
 out.push("# Weblio Dialect Dictionaries — Yomitan edition (all 23)");
 out.push("");
 out.push("Source: <https://www.weblio.jp/cat/dialect> | Format: Yomitan / Yomichan (format 3)");
+out.push("");
+out.push("Two editions are shipped from the same data:");
+out.push("");
+out.push("| Edition | Files | Use it when |");
+out.push("|---|---|---|");
+out.push(
+  `| Per dialect | 23 zips, one per dictionary | you want one region, or want to switch dialects on and off separately |`,
+);
+out.push(
+  `| Combined | \`${mergedFile}\` | you want the whole dialect corpus in a single dictionary slot |`,
+);
+out.push("");
+out.push("## Per-dialect editions");
 out.push("");
 out.push("| # | Dictionary | Region | Headwords | Lookup terms | Snapshot |");
 out.push("|---|---|---|---|---|---|");
@@ -49,11 +88,26 @@ rows.forEach((r, i) => {
 out.push("");
 out.push(`Total: 23 dictionaries, ${fmt(totalEntries)} headwords, ${fmt(totalTerms)} lookup terms.`);
 out.push("");
+out.push("## Combined edition");
+out.push("");
+out.push(mergedNote);
+out.push("");
+if (merged.built) {
+  out.push(
+    `The combined zip holds the same ${fmt(merged.terms)} lookup terms as the 23 separate builds, ` +
+      `so nothing is lost or duplicated — it is the same entries in one file, each labelled with ` +
+      `its source dictionary (and tagged, so Yomitan's tag filter can narrow it to one dialect).`,
+  );
+  out.push("");
+}
 out.push("## Install (Yomitan / Yomichan)");
 out.push("");
 out.push("1. Open Yomitan settings → Dictionaries → Import");
-out.push("2. Pick any `[JA-JA Dialect] Weblio….zip` from this folder (you can select several at once)");
+out.push("2. Pick either edition: any `[JA-JA Dialect] Weblio….zip` from this folder (you can select several at once)");
 out.push("3. Wait for the index to finish, then look words up");
+out.push("");
+out.push("Installing both editions at once is not useful — the combined one already contains everything,");
+out.push("and Yomitan would show each word twice.");
 out.push("");
 out.push("Each zip contains `index.json`, `term_bank_1.json` and `icon.png`, and declares");
 out.push("`isUpdatable` so Yomitan can update it in place once it is published to a GitHub release.");
@@ -80,6 +134,8 @@ if (!existsSync(README)) {
   });
   lines.push("");
   lines.push(`**23 dictionaries / ${fmt(totalEntries)} headwords / ${fmt(totalTerms)} lookup terms** in total.`);
+  lines.push("");
+  lines.push(`**Combined edition:** ${mergedNote}`);
   const table = lines.join("\n");
 
   const src = readFileSync(README, "utf8");

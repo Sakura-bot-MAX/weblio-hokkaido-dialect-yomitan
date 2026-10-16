@@ -2,6 +2,15 @@
 
 Source: <https://www.weblio.jp/cat/dialect> | Format: Yomitan / Yomichan (format 3)
 
+Two editions are shipped from the same data:
+
+| Edition | Files | Use it when |
+|---|---|---|
+| Per dialect | 23 zips, one per dictionary | you want one region, or want to switch dialects on and off separately |
+| Combined | `[JA-JA Dialect] Weblio方言辞典 統合版.zip` | you want the whole dialect corpus in a single dictionary slot |
+
+## Per-dialect editions
+
 | # | Dictionary | Region | Headwords | Lookup terms | Snapshot |
 |---|---|---|---|---|---|
 | 1 | 大阪弁 (Osaka Dialect) | Osaka | 2,639 | 2,718 | 2026-10-13 |
@@ -30,11 +39,20 @@ Source: <https://www.weblio.jp/cat/dialect> | Format: Yomitan / Yomichan (format
 
 Total: 23 dictionaries, 27,602 headwords, 28,818 lookup terms.
 
+## Combined edition
+
+[zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E6%96%B9%E8%A8%80%E8%BE%9E%E5%85%B8%20%E7%B5%B1%E5%90%88%E7%89%88.zip) — all 28,818 lookup terms in a single dictionary (23 source dictionaries, 1913 KiB, snapshot 2026-10-13). Every entry carries the name of the dialect it came from.
+
+The combined zip holds the same 28,818 lookup terms as the 23 separate builds, so nothing is lost or duplicated — it is the same entries in one file, each labelled with its source dictionary (and tagged, so Yomitan's tag filter can narrow it to one dialect).
+
 ## Install (Yomitan / Yomichan)
 
 1. Open Yomitan settings → Dictionaries → Import
-2. Pick any `[JA-JA Dialect] Weblio….zip` from this folder (you can select several at once)
+2. Pick either edition: any `[JA-JA Dialect] Weblio….zip` from this folder (you can select several at once)
 3. Wait for the index to finish, then look words up
+
+Installing both editions at once is not useful — the combined one already contains everything,
+and Yomitan would show each word twice.
 
 Each zip contains `index.json`, `term_bank_1.json` and `icon.png`, and declares
 `isUpdatable` so Yomitan can update it in place once it is published to a GitHub release.

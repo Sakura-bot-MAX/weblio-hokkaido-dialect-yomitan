@@ -2,6 +2,7 @@
 //
 //   GITHUB_TOKEN=... node src/publish.mjs
 //   GITHUB_TOKEN=... node src/publish.mjs --slug=osaka
+//   GITHUB_TOKEN=... node src/publish.mjs --slug=all
 //   GITHUB_TOKEN=... node src/publish.mjs --force      # re-upload everything
 //
 // Every dictionary lives on its own release tag (the slug), so Yomitan's
@@ -9,6 +10,8 @@
 //
 //   .../releases/download/<slug>/index.json
 //   .../releases/download/<slug>/weblio-<slug>-dialect-yomitan.zip
+//
+// The combined edition is published the same way, under the tag "all".
 //
 // dist/published.json records the repository and revision that are currently
 // online, so an unchanged dictionary is never re-uploaded.
@@ -20,6 +23,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { MERGED, zipNameFor } from "./merged.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const REPO =
@@ -70,6 +74,21 @@ async function ensureRelease(tag) {
   return created.json;
 }
 
+// Release assets go to uploads.github.com. If the repository has been renamed
+// (an account rename or a transfer), that host answers 307 and — unlike
+// api.github.com — sends no Location header, so the upload cannot be retried
+// against the old name. Resolve the canonical "owner/name" once and upload
+// there; the API itself keeps following redirects for everything else.
+const UPLOAD_REPO = await (async () => {
+  const res = await api(`/repos/${REPO}`);
+  if (!res.ok) {
+    throw new Error(`cannot resolve ${REPO}: ${res.status} ${res.text.slice(0, 200)}`);
+  }
+  const canonical = res.json.full_name;
+  if (canonical !== REPO) console.log(`note: ${REPO} is now ${canonical}; uploading there\n`);
+  return canonical;
+})();
+
 async function replaceAsset(release, name, data) {
   const list = await api(`/repos/${REPO}/releases/${release.id}/assets?per_page=100`);
   for (const a of list.json || []) {
@@ -78,7 +97,7 @@ async function replaceAsset(release, name, data) {
     }
   }
   const res = await fetch(
-    `https://uploads.github.com/repos/${REPO}/releases/${release.id}/assets?name=${encodeURIComponent(name)}`,
+    `https://uploads.github.com/repos/${UPLOAD_REPO}/releases/${release.id}/assets?name=${encodeURIComponent(name)}`,
     {
       method: "POST",
       headers: { ...headers, "Content-Type": "application/octet-stream" },
@@ -96,9 +115,10 @@ const published = existsSync(publishedPath)
   : {};
 
 const all = JSON.parse(readFileSync(join(ROOT, "dictionaries.json"), "utf8"));
+const dicts = [...all, MERGED];
 const slugArg = process.argv.find((a) => a.startsWith("--slug="));
 const force = process.argv.includes("--force");
-const targets = slugArg ? all.filter((d) => d.slug === slugArg.split("=")[1]) : all;
+const targets = slugArg ? dicts.filter((d) => d.slug === slugArg.split("=")[1]) : dicts;
 
 // `entry` is { repo, revision }. Records written by older versions were a bare
 // revision string; those never match, so the dictionary is republished once and
@@ -115,7 +135,8 @@ function isCurrent(entry, revision) {
 for (const dict of targets) {
   const dir = join(ROOT, "dist", dict.slug);
   const indexPath = join(dir, "index.json");
-  const zipPath = join(dir, `weblio-${dict.slug}-dialect-yomitan.zip`);
+  const zipName = zipNameFor(dict.slug);
+  const zipPath = join(dir, zipName);
   if (!existsSync(indexPath) || !existsSync(zipPath)) {
     console.log(`${dict.slug.padEnd(8)} skipped (not built)`);
     continue;
@@ -128,7 +149,7 @@ for (const dict of targets) {
 
   const release = await ensureRelease(dict.slug);
   await replaceAsset(release, "index.json", readFileSync(indexPath));
-  await replaceAsset(release, `weblio-${dict.slug}-dialect-yomitan.zip`, readFileSync(zipPath));
+  await replaceAsset(release, zipName, readFileSync(zipPath));
   published[dict.slug] = { repo: REPO, revision: index.revision };
   console.log(`${dict.slug.padEnd(8)} published rev ${index.revision}`);
 }

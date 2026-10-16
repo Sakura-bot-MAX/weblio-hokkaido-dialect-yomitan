@@ -2,8 +2,44 @@
 
 Yomitan dictionaries built from **every** dialect dictionary in Weblio's
 [dialect category](https://www.weblio.jp/cat/dialect) — 23 dictionaries covering
-22 of Japan's 47 prefectures. Each one ships as a single zip you can import
-straight into Yomitan.
+22 of Japan's 47 prefectures.
+
+The same data ships in **two editions**, so you can pick how much you want to
+carry around:
+
+| Edition | Files | Use it when |
+|---|---|---|
+| **Per dialect** | 23 zips, one per dictionary | you want one region, or want to switch dialects on and off individually in Yomitan |
+| **Combined** | 1 zip (`Weblio方言辞典 統合版`) | you want the whole dialect corpus in a single dictionary slot |
+
+Both are built from the same snapshots by the same parser, so the two editions
+can never disagree with each other.
+
+## Combined edition
+
+`Weblio方言辞典 統合版` contains every term from all 23 dictionaries in one
+archive, published under the release tag `all`:
+
+```
+https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/all/weblio-all-dialect-yomitan.zip
+```
+
+Nothing is re-parsed or re-summarised for it — the entries are the very same
+terms as the 23 separate builds, in one `term_bank`, in `dictionaries.json`
+order. What changes is the labelling, so a merged entry still says where it came
+from:
+
+- the definition header gains a `〔大阪弁〕`-style label naming the source
+  dictionary;
+- each entry carries two Yomitan definition tags — the dictionary name
+  (大阪弁, 北海道方言辞書, …) and its region (Osaka, Hokkaido, …) — so Yomitan's
+  tag filter can narrow the combined dictionary down to a single dialect.
+
+Because it already contains everything, installing the combined edition *and*
+the per-dialect zips at once is pointless: Yomitan would show every word twice.
+Pick one edition.
+
+## Per-dialect editions
 
 <!-- DICT-TABLE-START -->
 | # | Dictionary | Region | Headwords | Lookup terms | Snapshot | Download |
@@ -33,16 +69,19 @@ straight into Yomitan.
 | 23 | 下関弁辞典 (Shimonoseki Dialect Dictionary) | Yamaguchi (Shimonoseki) | 242 | 252 | 2026-10-13 | [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E4%B8%8B%E9%96%A2%E5%BC%81.zip) |
 
 **23 dictionaries / 27,602 headwords / 28,818 lookup terms** in total.
+
+**Combined edition:** [zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E6%96%B9%E8%A8%80%E8%BE%9E%E5%85%B8%20%E7%B5%B1%E5%90%88%E7%89%88.zip) — all 28,818 lookup terms in a single dictionary (23 source dictionaries, 1913 KiB, snapshot 2026-10-13). Every entry carries the name of the dialect it came from.
 <!-- DICT-TABLE-END -->
 
 ## Install
 
-1. Download the zip for the dialect(s) you want
+1. Download the zip for the edition you want
 2. In Yomitan: **Settings → Dictionaries → Import**, then pick the zip
 3. The dictionaries declare `isUpdatable`, so Yomitan can update them in place
    afterwards
 
-You can import as many as you like; they coexist as separate dictionaries.
+You can import as many per-dialect zips as you like; they coexist as separate
+dictionaries.
 
 ## How lookups work
 
@@ -54,16 +93,20 @@ it.
 ## Repository layout
 
 ```
-dictionaries.json      definition of every dictionary (slug / code / metadata / English name / region)
-src/fetch-data.mjs     crawls Weblio into data/<slug>.json snapshots
-src/build.mjs          turns snapshots into Yomitan dictionaries (format 3)
-src/publish.mjs        publishes the builds to GitHub Releases
-src/lib/parse.mjs      parser shared by all dialect pages
-src/lib/html.mjs       entity decoding / tag stripping helpers
-src/index-md.mjs       generates the catalogue tables in the READMEs
-src/check-samples.mjs  runs the parser against stored samples
-data/<slug>.json       per-dictionary snapshot (git diff is the change history)
-dist/<slug>/           per-dictionary index.json / term_bank_1.json / zip
+dictionaries.json        definition of every dictionary (slug / code / metadata / English name / region)
+src/fetch-data.mjs       crawls Weblio into data/<slug>.json snapshots
+src/build.mjs            turns snapshots into per-dialect Yomitan dictionaries (format 3)
+src/merged.mjs           metadata for the combined edition
+src/build-merged.mjs     packs every snapshot into one dictionary (dist/all/)
+src/publish.mjs          publishes both editions to GitHub Releases
+src/lib/parse.mjs        parser shared by all dialect pages
+src/lib/html.mjs         entity decoding / tag stripping helpers
+src/index-md.mjs         generates the catalogue tables in the READMEs
+src/validate.mjs         quality checks on both editions
+src/check-samples.mjs    runs the parser against stored samples
+data/<slug>.json         per-dictionary snapshot (git diff is the change history)
+dist/<slug>/             per-dialect index.json / term_bank_1.json / zip
+dist/all/                combined edition, same three files
 ```
 
 ## Building
@@ -72,13 +115,19 @@ dist/<slug>/           per-dictionary index.json / term_bank_1.json / zip
 node src/fetch-data.mjs            # crawl every dictionary (hours on a cold cache)
 node src/fetch-data.mjs --slug=osaka
 node src/fetch-data.mjs --offline  # just report on existing snapshots
-node src/build.mjs                 # produce dist/<slug>/
-node src/validate.mjs              # quality checks on the build
+node src/build.mjs                 # produce dist/<slug>/ (23 dictionaries)
+node src/build-merged.mjs          # produce dist/all/ (combined edition)
+node src/validate.mjs              # quality checks on both editions
 node src/index-md.mjs              # refresh the README catalogue tables
 ```
 
 Raw HTML is cached under `cache/<slug>/`, so an interrupted crawl resumes from
 the cache instead of re-fetching (`cache/` is not tracked by git).
+
+Both builds are deterministic: identical snapshots produce byte-identical zips,
+so a rebuild that changed nothing produces no diff. The combined build runs the
+per-dialect helpers over each snapshot in turn, so the two editions cannot drift
+apart.
 
 ## About the parser
 

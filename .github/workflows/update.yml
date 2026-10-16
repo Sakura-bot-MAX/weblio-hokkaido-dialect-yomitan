@@ -47,6 +47,9 @@ jobs:
       - name: Build dictionaries
         run: node src/build.mjs
 
+      - name: Build combined edition
+        run: node src/build-merged.mjs
+
       - name: Refresh README catalogue
         run: node src/index-md.mjs
 

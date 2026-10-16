@@ -1,0 +1,11 @@
+{
+  "title": "Weblio方言辞典 統合版",
+  "revision": "2026-10-13",
+  "format": 3,
+  "author": "Weblio dialect dictionaries (23 titles combined)",
+  "url": "https://www.weblio.jp/cat/dialect",
+  "description": "23 部の Weblio 方言辞典を 1 冊にまとめた統合版です。各項目には出典の辞典名が付きます。",
+  "isUpdatable": true,
+  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/all/index.json",
+  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/all/weblio-all-dialect-yomitan.zip"
+}

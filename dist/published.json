@@ -90,5 +90,9 @@
   "okndh": {
     "repo": "Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries",
     "revision": "2026-10-13"
+  },
+  "all": {
+    "repo": "Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries",
+    "revision": "2026-10-13"
   }
 }

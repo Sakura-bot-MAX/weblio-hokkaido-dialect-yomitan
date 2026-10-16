@@ -18,17 +18,22 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 // GitHub repository that hosts the releases, as "owner/name".
 // The update workflow passes this explicitly via GITHUB_REPOSITORY, so the
 // fallback only matters for local runs.
-const REPO =
+export const REPO =
   process.env.YOMITAN_REPO ||
   process.env.GITHUB_REPOSITORY ||
   "Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries";
 
 // --- helpers --------------------------------------------------------------
+//
+// Everything below is exported so src/build-merged.mjs can assemble the
+// "all dialects in one" edition from exactly the same parsing rules. The
+// per-dialect output must not change when those helpers move, so the shared
+// entry points keep their signatures.
 
 /** Split a 漢字表記 field into searchable spellings, expanding okurigana
  *  parentheses: '骨付(き)ざんぎ・骨附(き)ざんぎ' ->
  *  ['骨付ざんぎ','骨付きざんぎ','骨附ざんぎ','骨附きざんぎ'] */
-function kanjiVariants(field) {
+export function kanjiVariants(field) {
   const out = [];
   for (const raw of String(field || "").split(/[・･/、]/)) {
     const part = raw.trim().replace(/^【|】$/g, "");
@@ -48,7 +53,7 @@ function kanjiVariants(field) {
 
 /** Merge every written form of one word (same reading + pos + gloss) into a
  *  single entry, unioning all of its kanji spellings and index labels. */
-function mergeForms(rows) {
+export function mergeForms(rows) {
   const groups = new Map();
   for (const x of rows) {
     if (!x.headword) continue;
@@ -80,7 +85,7 @@ function mergeForms(rows) {
 }
 
 /** Strip pitch-accent notation so the reading stays a clean search key. */
-function cleanReading(s) {
+export function cleanReading(s) {
   return String(s || "")
     .replace(/[・△]/g, "")
     .replace(/[〈（(\[][^〉）)\]]*[〉）)\]]/g, "")
@@ -95,7 +100,7 @@ const KANA_ONLY = /^[\u3041-\u309F\u30A0-\u30FF\u30FC\u30FB\u30FD\u30FEー]+$/;
  * fall back to any kana-only form we know about (index label first), which
  * turns 博多弁 "お・る【居る】" into the reading "おる".
  */
-function entryReading(entry) {
+export function entryReading(entry) {
   if (entry.reading) return cleanReading(entry.reading);
   const cands = [entry.label, ...(entry.labels || []), entry.headword, ...(entry.variants || [])];
   for (const c of cands) {
@@ -106,7 +111,7 @@ function entryReading(entry) {
 }
 
 /** Index labels are the site's own lookup keys; drop ones that are unusable. */
-function usableLabel(s) {
+export function usableLabel(s) {
   const t = String(s || "").trim();
   if (!t || t.length > 40) return false;
   if (/^\d+$/.test(t)) return false;
@@ -144,8 +149,12 @@ function renderBody(entry) {
   return { tag: "div", content };
 }
 
-/** Render one entry as Yomitan structured-content. */
-function buildDefinition(entry) {
+/** Render one entry as Yomitan structured-content.
+ *
+ *  `source` names the dictionary the entry came from. The per-dialect builds
+ *  leave it empty (the dictionary heading already says it); the combined
+ *  edition passes the dialect name so the origin survives the merge. */
+export function buildDefinition(entry, source = "") {
   const { headword, reading, kanji = "", pos = [], region = [], url } = entry;
 
   // The <span class=ve> reading carries the pitch accent as ・; keep it out of
@@ -155,6 +164,7 @@ function buildDefinition(entry) {
   if (kanji) header.push({ tag: "span", content: `【${kanji}】` });
   if (pos.length) header.push({ tag: "span", content: ` [${pos.join("・")}]` });
   if (region.length) header.push({ tag: "span", content: ` 〈${region.join("・")}〉` });
+  if (source) header.push({ tag: "span", content: ` 〔${source}〕` });
   header.push({ tag: "a", content: "詳細", href: url });
 
   return [
@@ -169,7 +179,7 @@ function buildDefinition(entry) {
 }
 
 /** Minimal 64x64 PNG icon: light background with a centred blue square. */
-function makeIcon(size = 64) {
+export function makeIcon(size = 64) {
   const bg = [245, 247, 250];
   const fg = [52, 120, 200];
   const pad = Math.floor(size / 5);

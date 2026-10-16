@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "fetch": "node src/fetch-data.mjs",
-    "build": "node src/build.mjs",
+    "build": "node src/build.mjs && node src/build-merged.mjs",
+    "build:dialects": "node src/build.mjs",
+    "build:merged": "node src/build-merged.mjs",
+    "validate": "node src/validate.mjs",
     "publish": "node src/publish.mjs",
     "offline": "node src/fetch-data.mjs --offline",
     "check": "node src/check-samples.mjs"
