@@ -21,7 +21,7 @@ can never disagree with each other.
 archive, published under the release tag `all`:
 
 ```
-https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/all/weblio-all-dialect-yomitan.zip
+https://github.com/dtotaku/weblio-dialect-yomitan-dictionaries/releases/download/all/weblio-all-dialect-yomitan.zip
 ```
 
 Nothing is re-parsed or re-summarised for it — the entries are the very same

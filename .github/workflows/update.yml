@@ -53,6 +53,17 @@ jobs:
       - name: Refresh README catalogue
         run: node src/index-md.mjs
 
+      # Publish before committing: publish.mjs rewrites dist/published.json with
+      # the revisions that are now online, and the commit step below is what
+      # records it. Running publish last meant the published state was never
+      # committed, so every later run saw a stale record and re-uploaded all 24
+      # releases.
+      - name: Publish releases
+        run: node src/publish.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          YOMITAN_REPO: ${{ github.repository }}
+
       - name: Commit snapshots and builds
         run: |
           git config user.name  "github-actions[bot]"
@@ -64,9 +75,3 @@ jobs:
             git commit -m "Update dialect snapshots [skip ci]"
             git push
           fi
-
-      - name: Publish releases
-        run: node src/publish.mjs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          YOMITAN_REPO: ${{ github.repository }}

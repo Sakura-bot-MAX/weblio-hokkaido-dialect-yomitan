@@ -18,10 +18,16 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 // GitHub repository that hosts the releases, as "owner/name".
 // The update workflow passes this explicitly via GITHUB_REPOSITORY, so the
 // fallback only matters for local runs.
+//
+// The fallback must be the repository's *current* name. index.json embeds its
+// own release URLs, so if this string and GITHUB_REPOSITORY disagree, every
+// dictionary gets rebuilt with a different URL and CI commits a "change" that
+// no upstream data caused. (A renamed repository still redirects, which is why
+// the mismatch is easy to miss.)
 export const REPO =
   process.env.YOMITAN_REPO ||
   process.env.GITHUB_REPOSITORY ||
-  "Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries";
+  "dtotaku/weblio-dialect-yomitan-dictionaries";
 
 // --- helpers --------------------------------------------------------------
 //
