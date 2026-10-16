@@ -6,6 +6,6 @@
   "url": "https://www.weblio.jp/cat/dialect/kyktb",
   "description": "京ことば（Weblio）の全項目を収録した方言辞典です。",
   "isUpdatable": true,
-  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/kyktb/index.json",
-  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/kyktb/weblio-kyktb-dialect-yomitan.zip"
+  "indexUrl": "https://github.com/dtotaku/weblio-dialect-yomitan-dictionaries/releases/download/kyktb/index.json",
+  "downloadUrl": "https://github.com/dtotaku/weblio-dialect-yomitan-dictionaries/releases/download/kyktb/weblio-kyktb-dialect-yomitan.zip"
 }

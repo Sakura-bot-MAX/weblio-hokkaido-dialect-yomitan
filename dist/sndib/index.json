@@ -6,6 +6,6 @@
   "url": "https://www.weblio.jp/cat/dialect/sndib",
   "description": "仙台名取弁（Weblio）の全項目を収録した方言辞典です。",
   "isUpdatable": true,
-  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/sndib/index.json",
-  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/sndib/weblio-sndib-dialect-yomitan.zip"
+  "indexUrl": "https://github.com/dtotaku/weblio-dialect-yomitan-dictionaries/releases/download/sndib/index.json",
+  "downloadUrl": "https://github.com/dtotaku/weblio-dialect-yomitan-dictionaries/releases/download/sndib/weblio-sndib-dialect-yomitan.zip"
 }

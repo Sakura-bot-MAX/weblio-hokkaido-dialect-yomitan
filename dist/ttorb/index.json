@@ -6,6 +6,6 @@
   "url": "https://www.weblio.jp/cat/dialect/ttorb",
   "description": "鳥取弁辞書（Weblio）の全項目を収録した方言辞典です。",
   "isUpdatable": true,
-  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/ttorb/index.json",
-  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/ttorb/weblio-ttorb-dialect-yomitan.zip"
+  "indexUrl": "https://github.com/dtotaku/weblio-dialect-yomitan-dictionaries/releases/download/ttorb/index.json",
+  "downloadUrl": "https://github.com/dtotaku/weblio-dialect-yomitan-dictionaries/releases/download/ttorb/weblio-ttorb-dialect-yomitan.zip"
 }

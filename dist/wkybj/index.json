@@ -6,6 +6,6 @@
   "url": "https://www.weblio.jp/cat/dialect/wkybj",
   "description": "和歌山弁辞書（Weblio）の全項目を収録した方言辞典です。",
   "isUpdatable": true,
-  "indexUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/wkybj/index.json",
-  "downloadUrl": "https://github.com/Sakura-bot-MAX/weblio-dialect-yomitan-dictionaries/releases/download/wkybj/weblio-wkybj-dialect-yomitan.zip"
+  "indexUrl": "https://github.com/dtotaku/weblio-dialect-yomitan-dictionaries/releases/download/wkybj/index.json",
+  "downloadUrl": "https://github.com/dtotaku/weblio-dialect-yomitan-dictionaries/releases/download/wkybj/weblio-wkybj-dialect-yomitan.zip"
 }
