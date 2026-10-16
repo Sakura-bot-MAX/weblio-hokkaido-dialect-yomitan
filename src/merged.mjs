@@ -8,10 +8,11 @@
 //     want the whole dialect corpus in a single dictionary slot.
 //
 // Both are built from the same snapshots with the same parser, so the combined
-// edition never disagrees with the individual ones. Every combined entry keeps
-// the name of the dictionary it came from, both as a label inside the
-// definition and as a Yomitan definition tag — once everything shares one
-// dictionary heading, that tag is what tells 大阪弁 apart from 北海道方言.
+// edition never disagrees with the individual ones — an entry's definition body
+// is byte-identical to the per-dialect build of the same snapshot. The only
+// thing the merge adds is a Yomitan definition tag naming the dictionary the
+// entry came from: once everything shares one dictionary heading, that tag is
+// what tells 大阪弁 apart from 北海道方言, so the body does not repeat it.
 
 /** Slug of the combined edition. Also its release tag. */
 export const MERGED_SLUG = "all";

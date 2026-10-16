@@ -18,6 +18,7 @@ const dicts = JSON.parse(readFileSync(join(ROOT, "dictionaries.json"), "utf8"));
 let grand = 0;
 let grandTerms = 0;
 const problems = [];
+const perDialect = [];
 
 console.log(
   "slug     entries  words  terms  empty  modes                          zip",
@@ -55,6 +56,7 @@ for (const d of dicts) {
     words = new Set(tb.map((t) => t[1])).size;
     const zp = join(ROOT, "dist", d.slug, `weblio-${d.slug}-dialect-yomitan.zip`);
     zipKb = existsSync(zp) ? Math.round(readFileSync(zp).length / 1024) : 0;
+    perDialect.push({ slug: d.slug, tb });
   }
 
   grand += entries.length;
@@ -79,13 +81,26 @@ if (!existsSync(mergedIndexPath)) {
   const tb = JSON.parse(readFileSync(join(mergedDir, "term_bank_1.json"), "utf8"));
   const zipPath = join(mergedDir, zipNameFor(MERGED.slug));
   const zipKb = existsSync(zipPath) ? Math.round(readFileSync(zipPath).length / 1024) : 0;
-  const sources = new Set(tb.map((t) => t[2].split(",")[0]));
-  const unlabelled = tb.filter((t) => !t[2] || !/〔/.test(JSON.stringify(t[5]))).length;
+  const sources = new Set(tb.map((t) => t[2]));
+  const untagged = tb.filter((t) => !t[2]).length;
 
   console.log(
     `\n${MERGED.slug.padEnd(8)} ${String(tb.length).padStart(6)} terms  ` +
       `${String(sources.size).padStart(3)} source dictionaries  ${zipKb} KiB  rev ${index.revision}`,
   );
+
+  // The merge must not touch a definition: the combined edition is the same
+  // entries in one file, told apart by their tag and nothing else. Walk the
+  // per-dialect builds in the same order and compare term for term.
+  let drifted = 0;
+  let cursor = 0;
+  for (const { tb: one } of perDialect) {
+    const slice = tb.slice(cursor, cursor + one.length);
+    for (let i = 0; i < one.length; i++) {
+      if (!slice[i] || JSON.stringify(slice[i][5]) !== JSON.stringify(one[i][5])) drifted++;
+    }
+    cursor += one.length;
+  }
 
   const checks = [];
   if (tb.length !== grandTerms) {
@@ -94,7 +109,8 @@ if (!existsSync(mergedIndexPath)) {
   if (sources.size !== dicts.length) {
     checks.push(`only ${sources.size} of ${dicts.length} dictionaries are represented`);
   }
-  if (unlabelled) checks.push(`${unlabelled} terms have no source label or tag`);
+  if (untagged) checks.push(`${untagged} terms carry no source tag`);
+  if (drifted) checks.push(`${drifted} definitions differ from the per-dialect builds`);
   if (index.format !== 3) checks.push(`format is ${index.format}, expected 3`);
   if (!index.isUpdatable || !index.indexUrl || !index.downloadUrl) {
     checks.push("index.json is missing the self-update fields");
@@ -103,7 +119,7 @@ if (!existsSync(mergedIndexPath)) {
     console.log("  PROBLEMS:");
     for (const c of checks) console.log(`    - ${c}`);
   } else {
-    console.log("  ok: matches the per-dialect builds term for term");
+    console.log("  ok: same terms and same definitions as the per-dialect builds");
   }
 }
 

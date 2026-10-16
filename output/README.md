@@ -41,9 +41,9 @@ Total: 23 dictionaries, 27,602 headwords, 28,818 lookup terms.
 
 ## Combined edition
 
-[zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E6%96%B9%E8%A8%80%E8%BE%9E%E5%85%B8%20%E7%B5%B1%E5%90%88%E7%89%88.zip) — all 28,818 lookup terms in a single dictionary (23 source dictionaries, 1908 KiB, snapshot 2026-10-13). Every entry carries the name of the dialect it came from.
+[zip](output/%5BJA-JA%20Dialect%5D%20Weblio%E6%96%B9%E8%A8%80%E8%BE%9E%E5%85%B8%20%E7%B5%B1%E5%90%88%E7%89%88.zip) — all 28,818 lookup terms in a single dictionary (23 source dictionaries, 1890 KiB, snapshot 2026-10-13). Every entry is tagged with the Japanese name of the dialect it came from.
 
-The combined zip holds the same 28,818 lookup terms as the 23 separate builds, so nothing is lost or duplicated — it is the same entries in one file, each labelled with its source dictionary (and tagged, so Yomitan's tag filter can narrow it to one dialect).
+The combined zip holds the same 28,818 lookup terms as the 23 separate builds, so nothing is lost or duplicated — the same entries in one file, each tagged with the Japanese name of its source dictionary, which is also what Yomitan's tag filter uses to narrow the dictionary down to a single dialect.
 
 ## Install (Yomitan / Yomichan)
 

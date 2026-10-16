@@ -50,13 +50,17 @@ export function buildMerged(dicts) {
     // Yomitan's tag filter can narrow the combined dictionary down to a single
     // dialect. Those names already say which region they cover (大阪弁,
     // 北海道方言辞書, 下北弁辞典, …), so no second, English tag is needed.
+    //
+    // The tag is also the only place the dialect is named: Yomitan shows it
+    // next to the definition, so repeating it inside the entry body would just
+    // duplicate it on every line.
     const tags = dict.name;
 
     const merged = mergeForms(raw.entries || []);
     let count = 0;
     for (const entry of merged) {
       const reading = entryReading(entry);
-      const definition = buildDefinition(entry, dict.name);
+      const definition = buildDefinition(entry);
       const seen = new Set();
       const add = (expression) => {
         const expr = String(expression || "").trim();

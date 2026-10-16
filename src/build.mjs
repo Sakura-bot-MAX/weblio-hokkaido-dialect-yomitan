@@ -157,10 +157,10 @@ function renderBody(entry) {
 
 /** Render one entry as Yomitan structured-content.
  *
- *  `source` names the dictionary the entry came from. The per-dialect builds
- *  leave it empty (the dictionary heading already says it); the combined
- *  edition passes the dialect name so the origin survives the merge. */
-export function buildDefinition(entry, source = "") {
+ *  The definition body never names the dictionary: a per-dialect build is
+ *  already under its own dictionary heading, and the combined edition carries
+ *  the dialect name as a definition tag instead. */
+export function buildDefinition(entry) {
   const { headword, reading, kanji = "", pos = [], region = [], url } = entry;
 
   // The <span class=ve> reading carries the pitch accent as ・; keep it out of
@@ -170,7 +170,6 @@ export function buildDefinition(entry, source = "") {
   if (kanji) header.push({ tag: "span", content: `【${kanji}】` });
   if (pos.length) header.push({ tag: "span", content: ` [${pos.join("・")}]` });
   if (region.length) header.push({ tag: "span", content: ` 〈${region.join("・")}〉` });
-  if (source) header.push({ tag: "span", content: ` 〔${source}〕` });
   header.push({ tag: "a", content: "詳細", href: url });
 
   return [

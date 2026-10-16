@@ -57,7 +57,7 @@ if (existsSync(join(mergedDir, "term_bank_1.json"))) {
 const mergedNote = merged.built
   ? `${merged.link} — all ${fmt(merged.terms)} lookup terms in a single dictionary ` +
     `(${fmt(merged.sources)} source dictionaries, ${merged.kb} KiB, snapshot ${merged.rev}). ` +
-    `Every entry carries the name of the dialect it came from.`
+    `Every entry is tagged with the Japanese name of the dialect it came from.`
   : "not built yet (`node src/build-merged.mjs`).";
 
 // --- output/README.md -------------------------------------------------------
@@ -95,8 +95,9 @@ out.push("");
 if (merged.built) {
   out.push(
     `The combined zip holds the same ${fmt(merged.terms)} lookup terms as the 23 separate builds, ` +
-      `so nothing is lost or duplicated — it is the same entries in one file, each labelled with ` +
-      `its source dictionary (and tagged, so Yomitan's tag filter can narrow it to one dialect).`,
+      `so nothing is lost or duplicated — the same entries in one file, each tagged with the ` +
+      `Japanese name of its source dictionary, which is also what Yomitan's tag filter uses to ` +
+      `narrow the dictionary down to a single dialect.`,
   );
   out.push("");
 }
